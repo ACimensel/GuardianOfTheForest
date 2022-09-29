@@ -360,7 +360,7 @@ Transform:
   m_Children:
   - {fileID: 1237036846}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &526753398
 GameObject:
@@ -689,7 +689,7 @@ Transform:
   - {fileID: 1813485686}
   - {fileID: 526753399}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &820667350
 GameObject:
@@ -781,7 +781,7 @@ Transform:
   - {fileID: 1574803884}
   - {fileID: 1007352555}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &820667353
 Rigidbody2D:
@@ -968,7 +968,7 @@ Transform:
   - {fileID: 1650943673}
   - {fileID: 645211061}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1000398609
 GameObject:
