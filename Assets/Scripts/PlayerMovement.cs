@@ -5,16 +5,21 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour {
 
 	public CharacterController2D controller;
-	public Animator animator;
 
 	public float runSpeed = 40f;
 
+	private Animator animator;
 	private AnimatorClipInfo[] animCurrentClipInfo;
 	private float horizontalMove = 0f;
 	private float prevHorizontalMove = 0f;
 	private bool jump = false;
 	private bool crouch = false;
 	
+	void Start(){
+		animator = GetComponent<Animator>();
+	}
+
+
 	// Update is called once per frame
 	void Update(){
 		ControlSpeed();
@@ -35,6 +40,11 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetButtonDown("Attack") && !animator.GetBool("Crouching")){
 			animator.SetTrigger("Attack");
 		}
+
+		// if (Input.GetButtonDown("Dash")){
+		// 	animator.SetTrigger("Dash");
+		// 	controller.Dash(Input.GetAxisRaw("Horizontal"));
+		// }
 	}
 
 	void FixedUpdate(){
@@ -45,10 +55,14 @@ public class PlayerMovement : MonoBehaviour {
 
 	void ControlSpeed(){
 		animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-		if(animCurrentClipInfo[0].clip.name == "FemWarrior_attack"){
+		string animationName = animCurrentClipInfo[0].clip.name;
+		if(animationName == "FemWarrior_attack"){
 			horizontalMove = (animator.GetBool("Jumping")) ? prevHorizontalMove : 0f;
 			// horizontalMove = 0f;
 		}
+		// else if(animationName == "FemWarrior_dash"){
+		// 	horizontalMove = 0f;
+		// }
 		else{
 			prevHorizontalMove = horizontalMove;
 			horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
