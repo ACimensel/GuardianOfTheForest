@@ -32,16 +32,13 @@ public class CharacterController2D : MonoBehaviour {
 
 	private void Awake(){
 		m_Rigidbody2D = GetComponent<Rigidbody2D>();
+		animator = GetComponent<Animator>();
 
 		if(OnLandEvent == null)
 			OnLandEvent = new UnityEvent();
 
 		if(OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
-	}
-
-	void Start(){
-		animator = GetComponent<Animator>();
 	}
 
 	private void FixedUpdate(){
