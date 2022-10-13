@@ -8,27 +8,27 @@ public class Guardian : MonoBehaviour {
 	[SerializeField] float fallTolerance = -5f;
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
-    [SerializeField] float rangedAttackStaggerTime = 0.5f;
     [SerializeField] float invulnerabilityTime = 3f;
 	[SerializeField] int healthPoints = 3;
 
 	private Renderer renderer;
 	private Color startColor;
 	private Rigidbody2D rb;
-	private Animator anim;
+	private Animator animator;
 	private float dirX = 0f;
 	private bool isMovementEnabled = true;
 	private bool facingRight = true;
 	private Vector3 localScale;
 	private float tolerance = 0.01f;
 	private bool isDamageEnabled = true;
+    private float attackStaggerTime = 0.5f;
 
 	// Use this for initialization
 	void Awake(){
 		renderer = GetComponent<Renderer>();
 		startColor = renderer.material.color;
 		rb = GetComponent<Rigidbody2D> ();
-		anim = GetComponent<Animator> ();
+		animator = GetComponent<Animator> ();
 		localScale = transform.localScale;
 	}
 	
@@ -54,32 +54,47 @@ public class Guardian : MonoBehaviour {
 
 	void SetAnimationState(){
 		float absX = Mathf.Abs(dirX);
-		anim.SetFloat("Speed", absX);
+		animator.SetFloat("Speed", absX);
 
 		if (Mathf.Abs(rb.velocity.y) < tolerance){
-			anim.SetBool("isJumping", false);
-			anim.SetBool("isFalling", false);
+			animator.SetBool("isJumping", false);
+			animator.SetBool("isFalling", false);
 		}
 
 		if (Input.GetKey(KeyCode.S) && absX > tolerance){
-			anim.SetBool("isSliding", true);
+			animator.SetBool("isSliding", true);
 			Debug.Log("SLIDE WEEE");
 		}
 		else
-			anim.SetBool("isSliding", false);
+			animator.SetBool("isSliding", false);
 
 		if (Input.GetButtonDown("Jump") && isMovementEnabled)
-			anim.SetBool("isJumping", true);
+			animator.SetBool("isJumping", true);
 		
 		if (rb.velocity.y < fallTolerance){
-			anim.SetBool("isJumping", false);
-			anim.SetBool("isFalling", true);
+			animator.SetBool("isJumping", false);
+			animator.SetBool("isFalling", true);
 		}
 
-		if (Input.GetButtonDown("Ranged Attack") && isMovementEnabled){
-			anim.SetTrigger("RangedAttack");
-			anim.SetBool("isAttackingR", true);
+		if (Input.GetButtonDown("Ranged Attack") && isMovementEnabled && !animator.GetBool("isAttackingM")){
+			animator.SetTrigger("RangedAttack");
+			animator.SetBool("isAttackingR", true);
 			StartCoroutine("WaitForRangedAttackFinish");
+
+			disableMovement(false);
+		}
+
+		if (Input.GetButtonDown("Melee Attack") && isMovementEnabled && !animator.GetBool("isAttackingR")){
+
+			AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+			string animationName = animCurrentClipInfo[0].clip.name;
+			if(animationName == "Guardian_melee2")
+				animator.SetTrigger("MeleeAttack2");
+			else
+				animator.SetTrigger("MeleeAttack1");
+
+			animator.SetBool("isAttackingM", true);
+			StartCoroutine("WaitForMeleeAttackFinish");
 
 			disableMovement(false);
 		}
@@ -118,14 +133,14 @@ public class Guardian : MonoBehaviour {
             }
             else{
 				SetAllCollidersAndRbStatus(false);
-                anim.SetBool("isDead", true);
+                animator.SetBool("isDead", true);
             }
         }
     }
 
 	void disableMovement(bool b = true){
 		if(b)
-			anim.SetBool("isStaggered", true);
+			animator.SetBool("isStaggered", true);
 		isMovementEnabled = false;
 		dirX = 0;
 		rb.velocity = new Vector2 (0f, rb.velocity.y);
@@ -133,7 +148,7 @@ public class Guardian : MonoBehaviour {
 
 	void enableMovement(bool b = true){
 		if(b)
-			anim.SetBool("isStaggered", false);
+			animator.SetBool("isStaggered", false);
 		isMovementEnabled = true;
 	}
 
@@ -145,7 +160,7 @@ public class Guardian : MonoBehaviour {
  	}
 
 	IEnumerator BecomeInvulnerable(){
-		anim.SetTrigger("Hurt");
+		animator.SetTrigger("Hurt");
 		Coroutine flash = StartCoroutine ("Flash");
 
 		yield return new WaitForSeconds (invulnerabilityTime);
@@ -175,22 +190,37 @@ public class Guardian : MonoBehaviour {
 	}
 
 	IEnumerator WaitForRangedAttackFinish(){
-        yield return new WaitForSeconds(rangedAttackStaggerTime);
+        yield return new WaitForSeconds(attackStaggerTime);
 
-		anim.SetBool("isAttackingR", false);
-		anim.ResetTrigger("RangedAttack");
+		animator.SetBool("isAttackingR", false);
+		animator.ResetTrigger("RangedAttack");
 		enableMovement(false);
 	}
 
-	
-		// animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-		// string animationName = animCurrentClipInfo[0].clip.name;
-		// if(animationName == "FemWarrior_attack"){
-		// 	horizontalMove = (animator.GetBool("Jumping")) ? prevHorizontalMove : 0f;
-		// 	// horizontalMove = 0f;
-		// }
-		// else{
-		// 	prevHorizontalMove = horizontalMove;
-		// 	horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-		// }
+	IEnumerator WaitForMeleeAttackFinish(){
+		float comboWindow = 0.4f;
+
+        yield return new WaitForSeconds(attackStaggerTime - comboWindow);
+
+		// anim.ResetTrigger("MeleeAttack");
+		enableMovement(false);
+
+        yield return new WaitForSeconds(comboWindow);
+		
+		AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+		string animationName = animCurrentClipInfo[0].clip.name;
+		if(animationName == "Guardian_melee1" || animationName == "Guardian_melee2" || animationName == "Guardian_melee3")
+			animator.SetBool("isAttackingM", false);
+	}
 }
+
+// AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+// 		string animationName = animCurrentClipInfo[0].clip.name;
+// 		if(animationName == "FemWarrior_attack"){
+// 			horizontalMove = (animator.GetBool("Jumping")) ? prevHorizontalMove : 0f;
+// 			// horizontalMove = 0f;
+// 		}
+// 		else{
+// 			prevHorizontalMove = horizontalMove;
+// 			horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+// 		}
