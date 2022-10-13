@@ -42,11 +42,6 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetButtonDown("Attack") && !animator.GetBool("Crouching")){
 			animator.SetTrigger("Attack");
 		}
-
-		// if (Input.GetButtonDown("Dash")){
-		// 	animator.SetTrigger("Dash");
-		// 	controller.Dash(Input.GetAxisRaw("Horizontal"));
-		// }
 	}
 
 	void FixedUpdate(){
@@ -62,9 +57,6 @@ public class PlayerMovement : MonoBehaviour {
 			horizontalMove = (animator.GetBool("Jumping")) ? prevHorizontalMove : 0f;
 			// horizontalMove = 0f;
 		}
-		// else if(animationName == "FemWarrior_dash"){
-		// 	horizontalMove = 0f;
-		// }
 		else{
 			prevHorizontalMove = horizontalMove;
 			horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;

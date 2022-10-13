@@ -7,7 +7,8 @@ public class Guardian : MonoBehaviour {
 	[SerializeField] float jumpForce = 800f;
 	[SerializeField] float fallTolerance = -5f;
     [SerializeField] float flashTime = 0.2f;
-    [SerializeField] float staggerTime = 0.2f;
+    [SerializeField] float hitStaggerTime = 0.2f;
+    [SerializeField] float rangedAttackStaggerTime = 0.5f;
     [SerializeField] float invulnerabilityTime = 3f;
 	[SerializeField] int healthPoints = 3;
 
@@ -39,7 +40,7 @@ public class Guardian : MonoBehaviour {
 		if (isMovementEnabled)
 			dirX = Input.GetAxisRaw ("Horizontal") * moveSpeed;
 
-		SetAnimationState ();
+		SetAnimationState();
 	}
 
 	void FixedUpdate(){
@@ -73,6 +74,14 @@ public class Guardian : MonoBehaviour {
 		if (rb.velocity.y < fallTolerance){
 			anim.SetBool("isJumping", false);
 			anim.SetBool("isFalling", true);
+		}
+
+		if (Input.GetButtonDown("Ranged Attack") && isMovementEnabled){
+			anim.SetTrigger("RangedAttack");
+			anim.SetBool("isAttackingR", true);
+			StartCoroutine("WaitForRangedAttackFinish");
+
+			disableMovement(false);
 		}
 	}
 
@@ -114,14 +123,18 @@ public class Guardian : MonoBehaviour {
         }
     }
 
-	void disableMovement(){
-			isMovementEnabled = false;
-			dirX = 0;
-			rb.velocity = Vector2.zero;
+	void disableMovement(bool b = true){
+		if(b)
+			anim.SetBool("isStaggered", true);
+		isMovementEnabled = false;
+		dirX = 0;
+		rb.velocity = new Vector2 (0f, rb.velocity.y);
 	}
 
-	void enableMovement(){
-			isMovementEnabled = true;
+	void enableMovement(bool b = true){
+		if(b)
+			anim.SetBool("isStaggered", false);
+		isMovementEnabled = true;
 	}
 
 	void SetAllCollidersAndRbStatus(bool active){
@@ -132,7 +145,7 @@ public class Guardian : MonoBehaviour {
  	}
 
 	IEnumerator BecomeInvulnerable(){
-		anim.SetTrigger("isHurt"); //
+		anim.SetTrigger("Hurt");
 		Coroutine flash = StartCoroutine ("Flash");
 
 		yield return new WaitForSeconds (invulnerabilityTime);
@@ -156,8 +169,28 @@ public class Guardian : MonoBehaviour {
 	}
 
 	IEnumerator EnableMovementDelayed(){
-        yield return new WaitForSeconds(staggerTime);
+        yield return new WaitForSeconds(hitStaggerTime);
 
 		enableMovement();
 	}
+
+	IEnumerator WaitForRangedAttackFinish(){
+        yield return new WaitForSeconds(rangedAttackStaggerTime);
+
+		anim.SetBool("isAttackingR", false);
+		anim.ResetTrigger("RangedAttack");
+		enableMovement(false);
+	}
+
+	
+		// animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+		// string animationName = animCurrentClipInfo[0].clip.name;
+		// if(animationName == "FemWarrior_attack"){
+		// 	horizontalMove = (animator.GetBool("Jumping")) ? prevHorizontalMove : 0f;
+		// 	// horizontalMove = 0f;
+		// }
+		// else{
+		// 	prevHorizontalMove = horizontalMove;
+		// 	horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+		// }
 }
