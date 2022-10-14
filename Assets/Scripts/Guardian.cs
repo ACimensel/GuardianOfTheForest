@@ -166,12 +166,11 @@ public class Guardian : MonoBehaviour {
     }
 
 	void disableMovement(bool stagger = true){
-		if(stagger){
+		if(stagger)
 			animator.SetBool("isStaggered", true);
-			rb.velocity = new Vector2 (0f, rb.velocity.y);
-		}
 		isMovementEnabled = false;
 		dirX = 0;
+		rb.velocity = new Vector2 (0f, rb.velocity.y);
 	}
 
 	void enableMovement(bool wasStaggered = true){
