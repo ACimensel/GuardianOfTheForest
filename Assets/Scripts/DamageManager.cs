@@ -23,7 +23,6 @@ public class DamageManager : MonoBehaviour
 
     // Update is called once per frame
     void OnTriggerEnter2D (Collider2D col){
-        Debug.Log(LayerMask.LayerToName(col.gameObject.layer));
 		if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack" && damageEnabled){
             damageEnabled = false;
             health--;
