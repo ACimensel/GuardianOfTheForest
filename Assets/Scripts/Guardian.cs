@@ -33,7 +33,6 @@ public class Guardian : MonoBehaviour {
 		RANGED,
 	}
 
-	// Use this for initialization
 	void Awake(){
 		renderer = GetComponent<Renderer>();
 		startColor = renderer.material.color;
@@ -42,7 +41,6 @@ public class Guardian : MonoBehaviour {
 		localScale = transform.localScale;
 	}
 	
-	// Update is called once per frame
 	void Update(){
 		if (Input.GetButtonDown ("Jump") && isMovementEnabled && Mathf.Abs(rb.velocity.y) < tolerance)
 			rb.AddForce (Vector2.up * jumpForce);
@@ -102,14 +100,12 @@ public class Guardian : MonoBehaviour {
 			Vector2 player = this.gameObject.transform.position;
 			if(facingRight){
 				GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-				// bolt.GoRight();
 				bolt.SendMessage("SetVelocity", "right");
 			}
 			else{
 				GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
 				Vector3 scale = bolt.transform.localScale;
 				bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
-				// bolt.GoLeft();
 				bolt.SendMessage("SetVelocity", "left");
 			}
 		}
