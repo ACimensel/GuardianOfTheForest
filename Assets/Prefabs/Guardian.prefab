@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5190280643646015822}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.41, y: 4.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -125,7 +125,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.1, y: 0.13}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -136,7 +136,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.8169961, y: 0.9345751}
+  m_Size: {x: 0.54, y: 1.4}
   m_EdgeRadius: 0
 --- !u!58 &5190280643646015811
 CircleCollider2D:
@@ -151,9 +151,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.1, y: -0.4}
+  m_Offset: {x: 0, y: -0.665}
   serializedVersion: 2
-  m_Radius: 0.42
+  m_Radius: 0.27
 --- !u!95 &5190280643646015814
 Animator:
   serializedVersion: 4
@@ -186,7 +186,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ac8c036f9e2db4e8ea6260c8a3aa77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 8
+  jumpForce: 700
+  fallTolerance: -3
+  flashTime: 0.2
+  hitStaggerTime: 0.2
+  invulnerabilityTime: 3
+  healthPoints: 1
 --- !u!1 &5190280643862057074
 GameObject:
   m_ObjectHideFlags: 0

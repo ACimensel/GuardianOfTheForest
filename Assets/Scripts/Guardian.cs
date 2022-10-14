@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Guardian : MonoBehaviour {
+	[SerializeField] GameObject boltPrefab;
 	[SerializeField] float moveSpeed = 5f;
 	[SerializeField] float jumpForce = 800f;
 	[SerializeField] float fallTolerance = -5f;
@@ -89,8 +90,6 @@ public class Guardian : MonoBehaviour {
 		string animationName = animCurrentClipInfo[0].clip.name;
 
 		if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int) AttackStates.NONE){
-			Debug.Log("RANGED");
-			
 			disableMovement(false);
 			
 			if(attackCoroutine != null)
@@ -99,11 +98,24 @@ public class Guardian : MonoBehaviour {
 
 			animator.SetInteger("nextAttackState", (int) AttackStates.RANGED);
 			animator.SetTrigger("RangedAttack");
+
+			Vector2 player = this.gameObject.transform.position;
+			if(facingRight){
+				GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
+				// bolt.GoRight();
+				bolt.SendMessage("SetVelocity", "right");
+			}
+			else{
+				GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
+				Vector3 scale = bolt.transform.localScale;
+				bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
+				// bolt.GoLeft();
+				bolt.SendMessage("SetVelocity", "left");
+			}
 		}
 
 		if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int) AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int) AttackStates.MELEE3){
 			disableMovement(false);
-			Debug.Log("MELEEEE");
 
 			if(attackCoroutine != null)
 				StopCoroutine(attackCoroutine);
@@ -142,7 +154,7 @@ public class Guardian : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D col){
         Debug.Log("HIT");
-		if (LayerMask.LayerToName(col.gameObject.layer) == "Damage" && isDamageEnabled){
+		if (LayerMask.LayerToName(col.gameObject.layer) == "Enemy" && isDamageEnabled){
             isDamageEnabled = false;
 			disableMovement();
 
