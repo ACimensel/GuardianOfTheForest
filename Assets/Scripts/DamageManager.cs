@@ -5,16 +5,13 @@ using UnityEngine.Events;
 
 public class DamageManager : MonoBehaviour
 {
-	[System.Serializable] public class BoolEvent : UnityEvent<bool> { }
-	public BoolEvent OnChangeMovement;
-
+    [SerializeField] int health = 1;
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
 	private Renderer renderer;
 	private Color startColor;
     private Animator animator;
 	private Rigidbody2D rb;
-	private PlayerStats ps;
 	private bool damageEnabled = true;
 
     void Awake(){
@@ -22,36 +19,35 @@ public class DamageManager : MonoBehaviour
 		startColor = renderer.material.color;
         animator = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody2D>();
-        ps = GetComponent<PlayerStats>();
-
-		if(OnChangeMovement == null)
-			OnChangeMovement = new BoolEvent();
     }
 
     // Update is called once per frame
     void OnTriggerEnter2D (Collider2D col){
-        Debug.Log("HIT");
-		if (LayerMask.LayerToName(col.gameObject.layer) == "Damage" && damageEnabled){
+        Debug.Log(LayerMask.LayerToName(col.gameObject.layer));
+		if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack" && damageEnabled){
             damageEnabled = false;
-            OnChangeMovement.Invoke(false);
+            health--;
 
-            Debug.Log("DAMAGED");
-            ps.health--;
-
-            if(ps.health > 0){
+            if(health > 0){
                 if(col.gameObject.transform.position.x < this.gameObject.transform.position.x) 
-                    rb.AddForce(new Vector2(300f, 100f));
+                    rb.AddForce(new Vector2(50f, 30f));
                 else 
-                    rb.AddForce(new Vector2(-300f, 100f));
+                    rb.AddForce(new Vector2(-50f, 30f));
 
                 StartCoroutine ("BecomeInvulnerable");
-		        StartCoroutine ("TurnOnMovement");
             }
             else{
+				SetAllCollidersAndRbStatus(false);
                 animator.SetTrigger("isDead");
             }
         }
     }
+	void SetAllCollidersAndRbStatus(bool active){
+		GetComponent<Rigidbody2D>().isKinematic = !active;
+
+		foreach(Collider2D c in GetComponents<Collider2D>())
+			c.enabled = active;
+ 	}
 
 	IEnumerator BecomeInvulnerable(){
 		animator.SetTrigger("isHurt");
@@ -63,20 +59,6 @@ public class DamageManager : MonoBehaviour
 		startColor.a = 1f;
 		renderer.material.color = startColor;
         damageEnabled = true;
-	}
-
-    IEnumerator TurnOnMovement(){
-        // AnimatorClipInfo[] animatorinfo = animator.GetCurrentAnimatorClipInfo(0);
-		// string current_animation;
-
-    	// do{
-		// 	animatorinfo = animator.GetCurrentAnimatorClipInfo(0);
-		// 	current_animation = animatorinfo[0].clip.name;
-		// } while(current_animation != "FemWarrior_hurt");
-        
-        yield return new WaitForSeconds(5f);
-        
-        OnChangeMovement.Invoke(true);
 	}
 
     IEnumerator Flash(){
