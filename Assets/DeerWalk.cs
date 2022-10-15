@@ -17,7 +17,7 @@ public class DeerWalk : StateMachineBehaviour
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    {         
         deer.LookAtPlayer();
         Vector2 target = new Vector2(player.position.x, rb.position.y);
         Vector2 newPos = Vector2.MoveTowards(rb.position, target, deer.walkSpeed * Time.fixedDeltaTime);

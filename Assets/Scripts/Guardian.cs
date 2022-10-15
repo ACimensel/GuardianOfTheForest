@@ -11,7 +11,7 @@ public class Guardian : MonoBehaviour
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
-    [SerializeField] int healthPoints = 3;
+    [SerializeField] int healthPoints = 4;
 
     private Renderer renderer;
     private Color startColor;
@@ -34,6 +34,8 @@ public class Guardian : MonoBehaviour
         MELEE3,
         RANGED,
     }
+
+    public HealthBar healthBar;
 
     void Awake()
     {
@@ -176,6 +178,8 @@ public class Guardian : MonoBehaviour
 
             Debug.Log("DAMAGED");
             healthPoints--;
+            healthBar.SetHealth(healthPoints);
+
 
             if (healthPoints > 0)
             {

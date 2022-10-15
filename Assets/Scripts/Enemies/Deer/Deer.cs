@@ -102,7 +102,7 @@ public class Deer : MonoBehaviour
             }
         }
 
-        else if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerPresence")
+        else if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
         {
             animator.SetBool("detectedPlayer", true);
         }
@@ -117,7 +117,7 @@ public class Deer : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerPresence")
+        if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
         {
             animator.SetBool("detectedPlayer", false);
         }
