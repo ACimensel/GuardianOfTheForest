@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Guardian : MonoBehaviour {
-	[SerializeField] GameObject boltPrefab;
-	[SerializeField] float moveSpeed = 5f;
-	[SerializeField] float jumpForce = 800f;
-	[SerializeField] float fallTolerance = -5f;
+public class Guardian : MonoBehaviour
+{
+    [SerializeField] GameObject boltPrefab;
+    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float jumpForce = 800f;
+    [SerializeField] float fallTolerance = -5f;
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
-	[SerializeField] int healthPoints = 3;
+    [SerializeField] int healthPoints = 4;
 
 	public Transform attackPoint;
 	public float attackRange = 0.5f;
 	public LayerMask enemyLayers;
+    public HealthBar healthBar;
 
 	private Renderer rend;
 	private Color startColor;
@@ -27,15 +29,15 @@ public class Guardian : MonoBehaviour {
 	private float tolerance = 0.01f;
 	private bool isDamageEnabled = true;
     private float attackStaggerTime = 0.5f;
-	private Coroutine attackCoroutine = null;
+    private Coroutine attackCoroutine = null;
 
-	enum AttackStates{
-		NONE = 0,
-		MELEE1,
-		MELEE2,
-		MELEE3,
-		RANGED,
-	}
+    enum AttackStates{
+        NONE = 0,
+        MELEE1,
+        MELEE2,
+        MELEE3,
+        RANGED,
+    }
 
 	void Awake(){
 		rend = GetComponent<Renderer>();
@@ -48,99 +50,111 @@ public class Guardian : MonoBehaviour {
 	void Update(){
 		if (Input.GetButtonDown ("Jump") && isMovementEnabled && Mathf.Abs(rb.velocity.y) < tolerance)
 			rb.AddForce (Vector2.up * jumpForce);
+    }
 
-		if (isMovementEnabled)
-			dirX = Input.GetAxisRaw ("Horizontal") * moveSpeed;
+    void Awake(){
+        renderer = GetComponent<Renderer>();
+        startColor = renderer.material.color;
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        localScale = transform.localScale;
+    }
 
-		SetAnimationState();
-	}
+    void Update(){
+        if (Input.GetButtonDown("Jump") && isMovementEnabled && Mathf.Abs(rb.velocity.y) < tolerance)
+            rb.AddForce(Vector2.up * jumpForce);
 
-	void FixedUpdate(){
-		if (isMovementEnabled)
-			rb.velocity = new Vector2 (dirX, rb.velocity.y);
-	}
+        if (isMovementEnabled)
+            dirX = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
-	void LateUpdate(){
-		CheckWhereToFace();
-	}
+        SetAnimationState();
+    }
 
-	void SetAnimationState(){
-		float absX = Mathf.Abs(dirX);
-		animator.SetFloat("Speed", absX);
+    void FixedUpdate(){
+        if (isMovementEnabled)
+            rb.velocity = new Vector2(dirX, rb.velocity.y);
+    }
 
-		if (Mathf.Abs(rb.velocity.y) < tolerance){
-			animator.SetBool("isJumping", false);
-			animator.SetBool("isFalling", false);
-		}
+    void LateUpdate(){
+        CheckWhereToFace();
+    }
 
-		if (Input.GetKey(KeyCode.S) && absX > tolerance){
-			animator.SetBool("isSliding", true);
-			Debug.Log("SLIDE WEEE");
-		}
-		else
-			animator.SetBool("isSliding", false);
+    void SetAnimationState(){
+        float absX = Mathf.Abs(dirX);
+        animator.SetFloat("Speed", absX);
 
-		if (Input.GetButtonDown("Jump") && isMovementEnabled)
-			animator.SetBool("isJumping", true);
-		
-		if (rb.velocity.y < fallTolerance){
-			animator.SetBool("isJumping", false);
-			animator.SetBool("isFalling", true);
-		}
+        if (Mathf.Abs(rb.velocity.y) < tolerance){
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", false);
+        }
 
-		AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-		string animationName = animCurrentClipInfo[0].clip.name;
+        if (Input.GetKey(KeyCode.S) && absX > tolerance){
+            animator.SetBool("isSliding", true);
+            Debug.Log("SLIDE WEEE");
+        }
+        else
+            animator.SetBool("isSliding", false);
 
-		if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int) AttackStates.NONE){
-			disableMovement(false);
-			
-			if(attackCoroutine != null)
-				StopCoroutine(attackCoroutine);
-			attackCoroutine = StartCoroutine("WaitForAttackFinish");
+        if (Input.GetButtonDown("Jump") && isMovementEnabled)
+            animator.SetBool("isJumping", true);
 
-			animator.SetInteger("nextAttackState", (int) AttackStates.RANGED);
-			animator.SetTrigger("RangedAttack");
+        if (rb.velocity.y < fallTolerance){
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", true);
+        }
 
-			Vector2 player = this.gameObject.transform.position;
-			if(facingRight){
-				GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-				bolt.SendMessage("SetVelocity", "right");
-			}
-			else{
-				GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-				Vector3 scale = bolt.transform.localScale;
-				bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
-				bolt.SendMessage("SetVelocity", "left");
-			}
-		}
+        AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+        string animationName = animCurrentClipInfo[0].clip.name;
 
-		if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int) AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int) AttackStates.MELEE3){ //TODO check for isHurt and isDead
-			disableMovement(false);
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE){
+            disableMovement(false);
 
-			if(attackCoroutine != null)
-				StopCoroutine(attackCoroutine);
-			attackCoroutine = StartCoroutine("WaitForAttackFinish");
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
+            attackCoroutine = StartCoroutine("WaitForAttackFinish");
 
-			if(animationName == "Guardian_melee1"){
-				animator.SetInteger("nextAttackState", (int) AttackStates.MELEE2);
-				animator.SetTrigger("MeleeAttack1");
-			}
-			else if(animationName == "Guardian_melee2"){
-				animator.SetInteger("nextAttackState", (int) AttackStates.MELEE3);
-				animator.SetTrigger("MeleeAttack2");
-			}
-			else{
-				animator.SetInteger("nextAttackState", (int) AttackStates.MELEE1);
-				animator.SetTrigger("MeleeAttack1");
-			}
+            animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
+            animator.SetTrigger("RangedAttack");
 
-			//
+            Vector2 player = this.gameObject.transform.position;
+            if (facingRight){
+                GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
+                bolt.SendMessage("SetVelocity", "right");
+            }
+            else{
+                GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
+                Vector3 scale = bolt.transform.localScale;
+                bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
+                bolt.SendMessage("SetVelocity", "left");
+            }
+        }
+
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3){
+            disableMovement(false);
+
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
+            attackCoroutine = StartCoroutine("WaitForAttackFinish");
+
+            if (animationName == "Guardian_melee1"){
+                animator.SetInteger("nextAttackState", (int)AttackStates.MELEE2);
+                animator.SetTrigger("MeleeAttack1");
+            }
+            else if (animationName == "Guardian_melee2"){
+                animator.SetInteger("nextAttackState", (int)AttackStates.MELEE3);
+                animator.SetTrigger("MeleeAttack2");
+            }
+            else{
+                animator.SetInteger("nextAttackState", (int)AttackStates.MELEE1);
+                animator.SetTrigger("MeleeAttack1");
+            }
+            
 			Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 			foreach(Collider2D enemy in hitEnemies){
 				enemy.GetComponent<DamageManager>().TakeDamage(1);
 			}
-		}
-	}
+        }
+    }
 
 	void OnDrawGizmosSelected(){
 		if(attackPoint == null)
@@ -148,99 +162,99 @@ public class Guardian : MonoBehaviour {
 		Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 	}
 
-	void CheckWhereToFace()
-	{
-		if (dirX > 0)
-			facingRight = true;
-		else if (dirX < 0)
-			facingRight = false;
+    void CheckWhereToFace(){
+        if (dirX > 0)
+            facingRight = true;
+        else if (dirX < 0)
+            facingRight = false;
 
-		if (((facingRight) && (localScale.x < 0)) || ((!facingRight) && (localScale.x > 0)))
-			localScale.x *= -1;
+        if (((facingRight) && (localScale.x < 0)) || ((!facingRight) && (localScale.x > 0)))
+            localScale.x *= -1;
 
-		transform.localScale = localScale;
-	}
+        transform.localScale = localScale;
+    }
 
-	void OnTriggerEnter2D (Collider2D col){
+    void OnTriggerEnter2D(Collider2D col){
         Debug.Log("HIT");
-		if (LayerMask.LayerToName(col.gameObject.layer) == "Enemy" && isDamageEnabled){
+        if (LayerMask.LayerToName(col.gameObject.layer) == "EnemyAttack" && isDamageEnabled){
             isDamageEnabled = false;
-			disableMovement();
+            disableMovement();
 
             Debug.Log("DAMAGED");
             healthPoints--;
+            healthBar.SetHealth(healthPoints);
 
-            if(healthPoints > 0){
-                if(col.gameObject.transform.position.x < this.gameObject.transform.position.x) 
+            if (healthPoints > 0){
+                if (col.gameObject.transform.position.x < this.gameObject.transform.position.x)
                     rb.AddForce(new Vector2(300f, 100f));
-                else 
+                else
                     rb.AddForce(new Vector2(-300f, 100f));
 
-                StartCoroutine ("BecomeInvulnerable");
-                StartCoroutine ("EnableMovementDelayed");
+                StartCoroutine("BecomeInvulnerable");
+                StartCoroutine("EnableMovementDelayed");
             }
             else{
-				SetAllCollidersAndRbStatus(false);
+                SetAllCollidersAndRbStatus(false);
                 animator.SetBool("isDead", true);
             }
         }
     }
 
-	void disableMovement(bool stagger = true){
-		if(stagger)
-			animator.SetBool("isStaggered", true);
-		isMovementEnabled = false;
-		dirX = 0;
-		rb.velocity = new Vector2 (0f, rb.velocity.y);
-	}
+    void disableMovement(bool stagger = true){
+        if (stagger)
+            animator.SetBool("isStaggered", true);
+        isMovementEnabled = false;
+        dirX = 0;
+        rb.velocity = new Vector2(0f, rb.velocity.y);
+    }
 
-	void enableMovement(bool wasStaggered = true){
-		if(wasStaggered)
-			animator.SetBool("isStaggered", false);
-		isMovementEnabled = true;
-	}
+    void enableMovement(bool wasStaggered = true){
+        if (wasStaggered)
+            animator.SetBool("isStaggered", false);
+        isMovementEnabled = true;
+    }
 
-	void SetAllCollidersAndRbStatus(bool active){
-		GetComponent<Rigidbody2D>().isKinematic = !active;
+    void SetAllCollidersAndRbStatus(bool active){
+        GetComponent<Rigidbody2D>().isKinematic = !active;
 
-		foreach(Collider2D c in GetComponents<Collider2D>())
-			c.enabled = active;
- 	}
+        foreach (Collider2D c in GetComponents<Collider2D>())
+            c.enabled = active;
+    }
 
-	IEnumerator BecomeInvulnerable(){
-		animator.SetTrigger("Hurt");
-		Coroutine flash = StartCoroutine ("Flash");
+    IEnumerator BecomeInvulnerable(){
+        animator.SetTrigger("Hurt");
+        Coroutine flash = StartCoroutine("Flash");
 
-		yield return new WaitForSeconds (invulnerabilityTime);
+        yield return new WaitForSeconds(invulnerabilityTime);
 
         StopCoroutine(flash);
 		startColor.a = 1f;
 		rend.material.color = startColor;
         isDamageEnabled = true;
-	}
+    }
 
     IEnumerator Flash(){
         startColor.a = 0.6f;
         float delta = 0.2f;
 
-        while(true){
+        while (true){
             delta *= -1;
             startColor.a += delta;
             rend.material.color = startColor;
             yield return new WaitForSeconds(flashTime);
         }
-	}
+    }
 
-	IEnumerator EnableMovementDelayed(){
+    IEnumerator EnableMovementDelayed(){
         yield return new WaitForSeconds(hitStaggerTime);
 
-		enableMovement();
-	}
+        enableMovement();
+    }
 
-	IEnumerator WaitForAttackFinish(){
+    IEnumerator WaitForAttackFinish(){
         yield return new WaitForSeconds(attackStaggerTime);
 
-		enableMovement(false);
-		animator.SetInteger("nextAttackState", (int) AttackStates.NONE);
-	}
+        enableMovement(false);
+        animator.SetInteger("nextAttackState", (int)AttackStates.NONE);
+    }
 }
