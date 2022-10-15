@@ -9,7 +9,8 @@ public class Deer : MonoBehaviour
     public float walkSpeed = 3.5f;
 
     public int health = 5;
-    public bool isInvulnerable = false;
+    [SerializeField] float invulnerabilityTime = 3f;
+    private bool isDamageEnabled = true;
     float destroyTime = 4f;
 
     public bool isFlipped = false;
@@ -19,6 +20,9 @@ public class Deer : MonoBehaviour
     private Renderer renderer;
     private Animator animator;
     Deer deer;
+
+    private Color startColor;
+    [SerializeField] float flashTime = 0.2f;
 
 
     public void LookAtPlayer()
@@ -41,13 +45,36 @@ public class Deer : MonoBehaviour
         animator = GetComponent<Animator>();
         deer = animator.GetComponent<Deer>();
         renderer = GetComponent<Renderer>();
-
+        startColor = renderer.material.color;
     }
 
-    void Die()
-    {
-        animator.SetTrigger("isDead");
 
+
+    IEnumerator Flash()
+    {
+        startColor.a = 0.6f;
+        float delta = 0.2f;
+
+        while (true)
+        {
+            delta *= -1;
+            startColor.a += delta;
+            renderer.material.color = startColor;
+            yield return new WaitForSeconds(flashTime);
+        }
+    }
+
+    IEnumerator BecomeInvulnerable()
+    {
+        animator.SetTrigger("isHurt");
+        Coroutine flash = StartCoroutine("Flash");
+
+        yield return new WaitForSeconds(invulnerabilityTime);
+
+        StopCoroutine(flash);
+        startColor.a = 1f;
+        renderer.material.color = startColor;
+        isDamageEnabled = true;
     }
 
     IEnumerator DestroyAfterTime()
@@ -58,12 +85,14 @@ public class Deer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack")
+        if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack" && isDamageEnabled)
         {
+            isDamageEnabled = false;
             health--;
 
-            if (health > 0) {
-                animator.SetTrigger("isHurt");
+            if (health > 0)
+            {
+                StartCoroutine("BecomeInvulnerable");
             }
 
             else
