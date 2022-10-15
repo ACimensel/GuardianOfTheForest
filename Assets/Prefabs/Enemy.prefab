@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4727164248437464715}
   - component: {fileID: 4727164248437464714}
+  - component: {fileID: 4727164248437464709}
   - component: {fileID: -3012873833960353833}
   - component: {fileID: 4727164248437464712}
   - component: {fileID: 4727164248437464711}
   - component: {fileID: 4727164248437464710}
-  - component: {fileID: 4727164248437464709}
   - component: {fileID: 4727164248437464716}
   m_Layer: 13
   m_Name: Enemy
@@ -30,7 +30,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4727164248437464708}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.53, y: 3.93, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -90,6 +90,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4727164248437464709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4727164248437464708}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eca2255e8b7ce643adc9e31d5deeea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 10
+  currentHealth: 10
+  flashTime: 0.3
+  invulnerabilityTime: 0.6
+  damageEnabled: 1
 --- !u!61 &-3012873833960353833
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -178,21 +195,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4727164248437464709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4727164248437464708}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9eca2255e8b7ce643adc9e31d5deeea2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 2
-  flashTime: 0.3
-  invulnerabilityTime: 1
 --- !u!50 &4727164248437464716
 Rigidbody2D:
   serializedVersion: 4
