@@ -4,41 +4,45 @@ using UnityEngine;
 
 public class Deer : MonoBehaviour
 {
-    public Transform player;
+
+    public float patrolSpeed = 5f;
+    public float walkSpeed = 3f;
+
+    public int health = 1;
+    public bool isInvulnerable = false;
+    float destroyTime = 4f;
+
     public bool isFlipped = false;
+    public bool facingRight = false;
+
+    public Transform player;
+ 	private Renderer renderer;
+    private Animator animator;
+    Deer deer;
+
 
     public void LookAtPlayer()
     {
-        Vector3 flipped = transform.localScale;
-        flipped.z *= -1f;
-
-        if (transform.position.x > player.position.x && isFlipped)
+        if (transform.position.x > player.position.x && facingRight)
         {
-            transform.localScale = flipped;
             transform.Rotate(0f, 180f, 0f);
-            isFlipped = false;
+            facingRight = false;
         }
-        else if (transform.position.x < player.position.x && !isFlipped)
+        else if (transform.position.x < player.position.x && !facingRight)
         {
-            transform.localScale = flipped;
             transform.Rotate(0f, 180f, 0f);
-            isFlipped = true;
+            facingRight = true;
         }
     }
 
-
-    private Animator animator;
-    Deer deer;
 
     void Awake()
     {
         animator = GetComponent<Animator>();
         deer = animator.GetComponent<Deer>();
+        renderer = GetComponent<Renderer>();
+
     }
-
-
-    public int health = 1;
-    public bool isInvulnerable = false;
 
     void Die()
     {
@@ -46,10 +50,9 @@ public class Deer : MonoBehaviour
 
     }
 
-    float destroyTime = 3f;
     IEnumerator DestroyAfterTime()
     {
-        yield return new WaitForSeconds(destroyTime);
+        yield return new WaitForSeconds(destroyTime);        
         Destroy(this.gameObject);
     }
 
@@ -60,10 +63,29 @@ public class Deer : MonoBehaviour
             health--;
             animator.SetTrigger("isDead");
             StartCoroutine("DestroyAfterTime");
+        }
 
+        else if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
+        {
+            animator.SetBool("detectedPlayer", true);
+        }
+
+        else if (LayerMask.LayerToName(col.gameObject.layer) == "Wall")
+        {
+            transform.Rotate(0f, 180f, 0f);
+            facingRight = !facingRight;
         }
 
     }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
+        {
+            animator.SetBool("detectedPlayer", false);
+        }
+    }
+
 
 }
 

@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeerWalk : StateMachineBehaviour
+public class DeerPatrol : StateMachineBehaviour
 {
-    public float attackRange = 3f;
     Transform player;
     Rigidbody2D rb;
     Deer deer;
@@ -20,24 +19,18 @@ public class DeerWalk : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        deer.LookAtPlayer();
-        Vector2 target = new Vector2(player.position.x, rb.position.y);
-        Vector2 newPos = Vector2.MoveTowards(rb.position, target, deer.walkSpeed * Time.fixedDeltaTime);
-        rb.MovePosition(newPos);
-
-        if (Vector2.Distance(player.position, rb.position) <= attackRange)
-        {
-            animator.SetTrigger("swipe");
+        if (deer.facingRight) {
+            rb.velocity = new Vector2(deer.patrolSpeed, 0f);
+        } else {
+            rb.velocity = new Vector2(-deer.patrolSpeed, 0f);
         }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.ResetTrigger("swipe");
+
     }
-
-
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
