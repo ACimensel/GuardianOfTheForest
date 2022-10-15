@@ -13,25 +13,26 @@ public class Guardian : MonoBehaviour
     [SerializeField] float invulnerabilityTime = 3f;
     [SerializeField] int healthPoints = 4;
 
+    public HealthBar healthBar;
 	public Transform attackPoint;
 	public float attackRange = 0.5f;
 	public LayerMask enemyLayers;
-    public HealthBar healthBar;
 
-	private Renderer rend;
-	private Color startColor;
-	private Rigidbody2D rb;
-	private Animator animator;
-	private float dirX = 0f;
-	private bool isMovementEnabled = true;
-	private bool facingRight = true;
-	private Vector3 localScale;
-	private float tolerance = 0.01f;
-	private bool isDamageEnabled = true;
+    private Renderer rend;
+    private Color startColor;
+    private Rigidbody2D rb;
+    private Animator animator;
+    private float dirX = 0f;
+    private bool isMovementEnabled = true;
+    private bool facingRight = true;
+    private Vector3 localScale;
+    private float tolerance = 0.01f;
+    private bool isDamageEnabled = true;
     private float attackStaggerTime = 0.5f;
     private Coroutine attackCoroutine = null;
 
-    enum AttackStates{
+    enum AttackStates
+    {
         NONE = 0,
         MELEE1,
         MELEE2,
@@ -39,28 +40,17 @@ public class Guardian : MonoBehaviour
         RANGED,
     }
 
-	void Awake(){
-		rend = GetComponent<Renderer>();
-		startColor = rend.material.color;
-		rb = GetComponent<Rigidbody2D>();
-		animator = GetComponent<Animator>();
-		localScale = transform.localScale;
-	}
-	
-	void Update(){
-		if (Input.GetButtonDown ("Jump") && isMovementEnabled && Mathf.Abs(rb.velocity.y) < tolerance)
-			rb.AddForce (Vector2.up * jumpForce);
-    }
-
-    void Awake(){
-        renderer = GetComponent<Renderer>();
-        startColor = renderer.material.color;
+    void Awake()
+    {
+        rend = GetComponent<Renderer>();
+        startColor = rend.material.color;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         localScale = transform.localScale;
     }
 
-    void Update(){
+    void Update()
+    {
         if (Input.GetButtonDown("Jump") && isMovementEnabled && Mathf.Abs(rb.velocity.y) < tolerance)
             rb.AddForce(Vector2.up * jumpForce);
 
@@ -70,25 +60,30 @@ public class Guardian : MonoBehaviour
         SetAnimationState();
     }
 
-    void FixedUpdate(){
+    void FixedUpdate()
+    {
         if (isMovementEnabled)
             rb.velocity = new Vector2(dirX, rb.velocity.y);
     }
 
-    void LateUpdate(){
+    void LateUpdate()
+    {
         CheckWhereToFace();
     }
 
-    void SetAnimationState(){
+    void SetAnimationState()
+    {
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
-        if (Mathf.Abs(rb.velocity.y) < tolerance){
+        if (Mathf.Abs(rb.velocity.y) < tolerance)
+        {
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", false);
         }
 
-        if (Input.GetKey(KeyCode.S) && absX > tolerance){
+        if (Input.GetKey(KeyCode.S) && absX > tolerance)
+        {
             animator.SetBool("isSliding", true);
             Debug.Log("SLIDE WEEE");
         }
@@ -98,7 +93,8 @@ public class Guardian : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isMovementEnabled)
             animator.SetBool("isJumping", true);
 
-        if (rb.velocity.y < fallTolerance){
+        if (rb.velocity.y < fallTolerance)
+        {
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", true);
         }
@@ -106,7 +102,8 @@ public class Guardian : MonoBehaviour
         AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
         string animationName = animCurrentClipInfo[0].clip.name;
 
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE){
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE)
+        {
             disableMovement(false);
 
             if (attackCoroutine != null)
@@ -117,11 +114,13 @@ public class Guardian : MonoBehaviour
             animator.SetTrigger("RangedAttack");
 
             Vector2 player = this.gameObject.transform.position;
-            if (facingRight){
+            if (facingRight)
+            {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
                 bolt.SendMessage("SetVelocity", "right");
             }
-            else{
+            else
+            {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
                 Vector3 scale = bolt.transform.localScale;
                 bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
@@ -129,40 +128,44 @@ public class Guardian : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3){
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3)
+        {
             disableMovement(false);
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
             attackCoroutine = StartCoroutine("WaitForAttackFinish");
 
-            if (animationName == "Guardian_melee1"){
+            if (animationName == "Guardian_melee1")
+            {
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE2);
                 animator.SetTrigger("MeleeAttack1");
             }
-            else if (animationName == "Guardian_melee2"){
+            else if (animationName == "Guardian_melee2")
+            {
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE3);
                 animator.SetTrigger("MeleeAttack2");
             }
-            else{
+            else
+            {
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE1);
                 animator.SetTrigger("MeleeAttack1");
             }
-            
+
 			Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 			foreach(Collider2D enemy in hitEnemies){
 				enemy.GetComponent<DamageManager>().TakeDamage(1);
 			}
         }
     }
-
 	void OnDrawGizmosSelected(){
 		if(attackPoint == null)
 			return;
 		Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 	}
 
-    void CheckWhereToFace(){
+    void CheckWhereToFace()
+    {
         if (dirX > 0)
             facingRight = true;
         else if (dirX < 0)
@@ -174,9 +177,11 @@ public class Guardian : MonoBehaviour
         transform.localScale = localScale;
     }
 
-    void OnTriggerEnter2D(Collider2D col){
+    void OnTriggerEnter2D(Collider2D col)
+    {
         Debug.Log("HIT");
-        if (LayerMask.LayerToName(col.gameObject.layer) == "EnemyAttack" && isDamageEnabled){
+        if (LayerMask.LayerToName(col.gameObject.layer) == "EnemyAttack" && isDamageEnabled)
+        {
             isDamageEnabled = false;
             disableMovement();
 
@@ -184,7 +189,9 @@ public class Guardian : MonoBehaviour
             healthPoints--;
             healthBar.SetHealth(healthPoints);
 
-            if (healthPoints > 0){
+
+            if (healthPoints > 0)
+            {
                 if (col.gameObject.transform.position.x < this.gameObject.transform.position.x)
                     rb.AddForce(new Vector2(300f, 100f));
                 else
@@ -193,14 +200,16 @@ public class Guardian : MonoBehaviour
                 StartCoroutine("BecomeInvulnerable");
                 StartCoroutine("EnableMovementDelayed");
             }
-            else{
+            else
+            {
                 SetAllCollidersAndRbStatus(false);
                 animator.SetBool("isDead", true);
             }
         }
     }
 
-    void disableMovement(bool stagger = true){
+    void disableMovement(bool stagger = true)
+    {
         if (stagger)
             animator.SetBool("isStaggered", true);
         isMovementEnabled = false;
@@ -208,36 +217,41 @@ public class Guardian : MonoBehaviour
         rb.velocity = new Vector2(0f, rb.velocity.y);
     }
 
-    void enableMovement(bool wasStaggered = true){
+    void enableMovement(bool wasStaggered = true)
+    {
         if (wasStaggered)
             animator.SetBool("isStaggered", false);
         isMovementEnabled = true;
     }
 
-    void SetAllCollidersAndRbStatus(bool active){
+    void SetAllCollidersAndRbStatus(bool active)
+    {
         GetComponent<Rigidbody2D>().isKinematic = !active;
 
         foreach (Collider2D c in GetComponents<Collider2D>())
             c.enabled = active;
     }
 
-    IEnumerator BecomeInvulnerable(){
+    IEnumerator BecomeInvulnerable()
+    {
         animator.SetTrigger("Hurt");
         Coroutine flash = StartCoroutine("Flash");
 
         yield return new WaitForSeconds(invulnerabilityTime);
 
         StopCoroutine(flash);
-		startColor.a = 1f;
-		rend.material.color = startColor;
+        startColor.a = 1f;
+        rend.material.color = startColor;
         isDamageEnabled = true;
     }
 
-    IEnumerator Flash(){
+    IEnumerator Flash()
+    {
         startColor.a = 0.6f;
         float delta = 0.2f;
 
-        while (true){
+        while (true)
+        {
             delta *= -1;
             startColor.a += delta;
             rend.material.color = startColor;
@@ -245,13 +259,15 @@ public class Guardian : MonoBehaviour
         }
     }
 
-    IEnumerator EnableMovementDelayed(){
+    IEnumerator EnableMovementDelayed()
+    {
         yield return new WaitForSeconds(hitStaggerTime);
 
         enableMovement();
     }
 
-    IEnumerator WaitForAttackFinish(){
+    IEnumerator WaitForAttackFinish()
+    {
         yield return new WaitForSeconds(attackStaggerTime);
 
         enableMovement(false);
