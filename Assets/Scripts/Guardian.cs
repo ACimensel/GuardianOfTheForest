@@ -13,7 +13,12 @@ public class Guardian : MonoBehaviour
     [SerializeField] float invulnerabilityTime = 3f;
     [SerializeField] int healthPoints = 4;
 
-    private Renderer renderer;
+    public HealthBar healthBar;
+	public Transform attackPoint;
+	public float attackRange = 0.5f;
+	public LayerMask enemyLayers;
+
+    private Renderer rend;
     private Color startColor;
     private Rigidbody2D rb;
     private Animator animator;
@@ -35,12 +40,10 @@ public class Guardian : MonoBehaviour
         RANGED,
     }
 
-    public HealthBar healthBar;
-
     void Awake()
     {
-        renderer = GetComponent<Renderer>();
-        startColor = renderer.material.color;
+        rend = GetComponent<Renderer>();
+        startColor = rend.material.color;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         localScale = transform.localScale;
@@ -143,17 +146,23 @@ public class Guardian : MonoBehaviour
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE3);
                 animator.SetTrigger("MeleeAttack2");
             }
-            else if (animationName == "Guardian_melee3")
-            {
-                animator.SetInteger("nextAttackState", (int)AttackStates.NONE);
-            }
             else
             {
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE1);
                 animator.SetTrigger("MeleeAttack1");
             }
+
+			Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+			foreach(Collider2D enemy in hitEnemies){
+				enemy.GetComponent<DamageManager>().TakeDamage(1);
+			}
         }
     }
+	void OnDrawGizmosSelected(){
+		if(attackPoint == null)
+			return;
+		Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+	}
 
     void CheckWhereToFace()
     {
@@ -232,7 +241,7 @@ public class Guardian : MonoBehaviour
 
         StopCoroutine(flash);
         startColor.a = 1f;
-        renderer.material.color = startColor;
+        rend.material.color = startColor;
         isDamageEnabled = true;
     }
 
@@ -245,7 +254,7 @@ public class Guardian : MonoBehaviour
         {
             delta *= -1;
             startColor.a += delta;
-            renderer.material.color = startColor;
+            rend.material.color = startColor;
             yield return new WaitForSeconds(flashTime);
         }
     }

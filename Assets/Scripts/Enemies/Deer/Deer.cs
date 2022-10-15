@@ -17,7 +17,7 @@ public class Deer : MonoBehaviour
     public bool facingRight = false;
 
     public Transform player;
-    private Renderer renderer;
+    private Renderer rend;
     private Animator animator;
     Deer deer;
 
@@ -44,8 +44,8 @@ public class Deer : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         deer = animator.GetComponent<Deer>();
-        renderer = GetComponent<Renderer>();
-        startColor = renderer.material.color;
+        rend = GetComponent<Renderer>();
+        startColor = rend.material.color;
     }
 
 
@@ -59,7 +59,7 @@ public class Deer : MonoBehaviour
         {
             delta *= -1;
             startColor.a += delta;
-            renderer.material.color = startColor;
+            rend.material.color = startColor;
             yield return new WaitForSeconds(flashTime);
         }
     }
@@ -73,7 +73,7 @@ public class Deer : MonoBehaviour
 
         StopCoroutine(flash);
         startColor.a = 1f;
-        renderer.material.color = startColor;
+        rend.material.color = startColor;
         isDamageEnabled = true;
     }
 
