@@ -5,13 +5,15 @@ using UnityEngine;
 public class Guardian : MonoBehaviour
 {
     [SerializeField] GameObject boltPrefab;
+    [SerializeField] GameObject lastRespawnLocation;
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpForce = 800f;
     [SerializeField] float fallTolerance = -5f;
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
-    [SerializeField] int healthPoints = 4;
+    [SerializeField] int currentHealth = 4;
+    [SerializeField] int maxHealth = 4;
 
     public HealthBar healthBar;
 	public Transform attackPoint;
@@ -104,7 +106,7 @@ public class Guardian : MonoBehaviour
 
         if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE)
         {
-            disableMovement(false);
+            DisableMovement(false);
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -130,7 +132,7 @@ public class Guardian : MonoBehaviour
 
         if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3)
         {
-            disableMovement(false);
+            DisableMovement(false);
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -179,18 +181,20 @@ public class Guardian : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("HIT");
-        if (LayerMask.LayerToName(col.gameObject.layer) == "EnemyAttack" && isDamageEnabled)
+        string layerName = LayerMask.LayerToName(col.gameObject.layer);
+        Debug.Log("Hit by layer: " + layerName);
+
+        if (layerName == "Enemy" && isDamageEnabled)
         {
             isDamageEnabled = false;
-            disableMovement();
+            DisableMovement();
 
             Debug.Log("DAMAGED");
-            healthPoints--;
-            healthBar.SetHealth(healthPoints);
+            currentHealth--;
+            healthBar.SetHealth(currentHealth);
 
 
-            if (healthPoints > 0)
+            if (currentHealth > 0)
             {
                 if (col.gameObject.transform.position.x < this.gameObject.transform.position.x)
                     rb.AddForce(new Vector2(300f, 100f));
@@ -202,13 +206,43 @@ public class Guardian : MonoBehaviour
             }
             else
             {
-                SetAllCollidersAndRbStatus(false);
-                animator.SetBool("isDead", true);
+                Die();
             }
+        }
+        else if (layerName == "Drop")
+        {
+            Die();
+            Reset();
+        }
+        else if (layerName == "Essence")
+        {
+            Reset();
         }
     }
 
-    void disableMovement(bool stagger = true)
+    void Die(){
+        DisableMovement();
+        SetAllCollidersAndRbStatus(false);
+        animator.SetBool("isDead", true);
+
+        currentHealth = 0;
+        healthBar.SetHealth(currentHealth);
+    }
+
+    void Reset(){
+        Vector3 treePos = lastRespawnLocation.transform.position;
+
+        this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 2f, treePos.z);
+
+        EnableMovement();
+        SetAllCollidersAndRbStatus(true);
+        animator.SetBool("isDead", false);
+
+        currentHealth = maxHealth;
+        healthBar.SetHealth(currentHealth);
+    }
+
+    void DisableMovement(bool stagger = true)
     {
         if (stagger)
             animator.SetBool("isStaggered", true);
@@ -217,7 +251,7 @@ public class Guardian : MonoBehaviour
         rb.velocity = new Vector2(0f, rb.velocity.y);
     }
 
-    void enableMovement(bool wasStaggered = true)
+    void EnableMovement(bool wasStaggered = true)
     {
         if (wasStaggered)
             animator.SetBool("isStaggered", false);
@@ -263,14 +297,14 @@ public class Guardian : MonoBehaviour
     {
         yield return new WaitForSeconds(hitStaggerTime);
 
-        enableMovement();
+        EnableMovement();
     }
 
     IEnumerator WaitForAttackFinish()
     {
         yield return new WaitForSeconds(attackStaggerTime);
 
-        enableMovement(false);
+        EnableMovement(false);
         animator.SetInteger("nextAttackState", (int)AttackStates.NONE);
     }
 }
