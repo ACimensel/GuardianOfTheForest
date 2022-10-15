@@ -150,7 +150,7 @@ public class Guardian : MonoBehaviour {
 
 	void OnTriggerEnter2D (Collider2D col){
         Debug.Log("HIT");
-		if (LayerMask.LayerToName(col.gameObject.layer) == "Enemy" && isDamageEnabled){
+		if (LayerMask.LayerToName(col.gameObject.layer) == "EnemyAttack" && isDamageEnabled){
             isDamageEnabled = false;
 			disableMovement();
 

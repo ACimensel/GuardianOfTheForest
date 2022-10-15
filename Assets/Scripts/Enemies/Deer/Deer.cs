@@ -6,9 +6,9 @@ public class Deer : MonoBehaviour
 {
 
     public float patrolSpeed = 5f;
-    public float walkSpeed = 3f;
+    public float walkSpeed = 3.5f;
 
-    public int health = 1;
+    public int health = 5;
     public bool isInvulnerable = false;
     float destroyTime = 4f;
 
@@ -16,7 +16,7 @@ public class Deer : MonoBehaviour
     public bool facingRight = false;
 
     public Transform player;
- 	private Renderer renderer;
+    private Renderer renderer;
     private Animator animator;
     Deer deer;
 
@@ -52,7 +52,7 @@ public class Deer : MonoBehaviour
 
     IEnumerator DestroyAfterTime()
     {
-        yield return new WaitForSeconds(destroyTime);        
+        yield return new WaitForSeconds(destroyTime);
         Destroy(this.gameObject);
     }
 
@@ -61,11 +61,19 @@ public class Deer : MonoBehaviour
         if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack")
         {
             health--;
-            animator.SetTrigger("isDead");
-            StartCoroutine("DestroyAfterTime");
+
+            if (health > 0) {
+                animator.SetTrigger("isHurt");
+            }
+
+            else
+            {
+                animator.SetTrigger("isDead");
+                StartCoroutine("DestroyAfterTime");
+            }
         }
 
-        else if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
+        else if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerPresence")
         {
             animator.SetBool("detectedPlayer", true);
         }
@@ -80,7 +88,7 @@ public class Deer : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
+        if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerPresence")
         {
             animator.SetBool("detectedPlayer", false);
         }
