@@ -6,6 +6,7 @@ public class Guardian : MonoBehaviour
 {
     [SerializeField] GameObject boltPrefab;
     [SerializeField] GameObject lastRespawnLocation;
+    [SerializeField] AudioClip[] meleeSounds;
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpForce = 800f;
     [SerializeField] float flashTime = 0.2f;
@@ -127,6 +128,11 @@ public class Guardian : MonoBehaviour
         if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3){
             DisableMovement(false);
 
+            // TODO move into its own script which gets called in attack states
+            AudioSource audioSrc = GetComponent<AudioSource>();
+            audioSrc.clip = meleeSounds[Random.Range(0, meleeSounds.Length)];
+            audioSrc.Play();
+            
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
             attackCoroutine = StartCoroutine("WaitForAttackFinish");
