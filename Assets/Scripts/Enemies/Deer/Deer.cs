@@ -4,26 +4,28 @@ using UnityEngine;
 
 public class Deer : MonoBehaviour
 {
+    [SerializeField] float invulnerabilityTime = 0.5f;
+    [SerializeField] float flashTime = 0.2f;
 
     public float patrolSpeed = 5f;
     public float walkSpeed = 3.5f;
-
     public int health = 5;
-    [SerializeField] float invulnerabilityTime = 3f;
-    private bool isDamageEnabled = true;
-    float destroyTime = 4f;
-
     public bool isFlipped = false;
     public bool facingRight = false;
-
     public Transform player;
+
     private Renderer rend;
     private Animator animator;
-    Deer deer;
-
     private Color startColor;
-    [SerializeField] float flashTime = 0.2f;
+    private bool isDamageEnabled = true;
+    private float destroyTime = 4f;
 
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+        rend = GetComponent<Renderer>();
+        startColor = rend.material.color;
+    }
 
     public void LookAtPlayer()
     {
@@ -38,17 +40,6 @@ public class Deer : MonoBehaviour
             facingRight = true;
         }
     }
-
-
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-        deer = animator.GetComponent<Deer>();
-        rend = GetComponent<Renderer>();
-        startColor = rend.material.color;
-    }
-
-
 
     IEnumerator Flash()
     {
@@ -85,34 +76,18 @@ public class Deer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack" && isDamageEnabled)
-        {
-            isDamageEnabled = false;
-            health--;
-
-            if (health > 0)
-            {
-                StartCoroutine("BecomeInvulnerable");
-            }
-
-            else
-            {
-                animator.SetTrigger("isDead");
-                StartCoroutine("DestroyAfterTime");
-            }
+		if(LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack" && isDamageEnabled){
+            TakeDamage(1); // TODO change damage of ranged projectile, or make projectile call TakeDamage() and get rid of OnTriggerEnter
         }
-
         else if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
         {
             animator.SetBool("detectedPlayer", true);
         }
-
         else if (LayerMask.LayerToName(col.gameObject.layer) == "Wall")
         {
             transform.Rotate(0f, 180f, 0f);
             facingRight = !facingRight;
         }
-
     }
 
     void OnTriggerExit2D(Collider2D col)
@@ -123,6 +98,19 @@ public class Deer : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damageTaken){
+        if(isDamageEnabled){
+            isDamageEnabled = false;
+            health -= damageTaken;
 
+            if(health > 0){
+                StartCoroutine ("BecomeInvulnerable");
+            }
+            else{
+                animator.SetBool("isDead", true);
+                StartCoroutine("DestroyAfterTime");
+                gameObject.layer = LayerMask.NameToLayer("Dead");
+            }
+        }
+    }
 }
-

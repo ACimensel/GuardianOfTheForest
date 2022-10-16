@@ -84,7 +84,7 @@ public class Guardian : MonoBehaviour
             animator.SetBool("isFalling", false);
         }
 
-        if (Input.GetKey(KeyCode.S) && absX > tolerance)
+        if (Input.GetButton("Slide") && absX > tolerance)
         {
             animator.SetBool("isSliding", true);
             Debug.Log("SLIDE WEEE");
@@ -156,7 +156,7 @@ public class Guardian : MonoBehaviour
 
 			Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 			foreach(Collider2D enemy in hitEnemies){
-				enemy.GetComponent<DamageManager>().TakeDamage(1);
+				enemy.GetComponent<Deer>().TakeDamage(1);
 			}
         }
     }
