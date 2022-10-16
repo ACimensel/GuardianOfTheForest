@@ -14,7 +14,7 @@ public class Bolt : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "EnemyAttack")
+        if (LayerMask.LayerToName(col.gameObject.layer) == "Enemy")
         {
             Destroy(this.gameObject);
         }
