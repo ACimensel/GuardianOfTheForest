@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/Area1-Corrupt-Forest.unity
+    guid: b39525d2199dbe344a20b8d2d72864ab
   m_configObjects: {}
