@@ -217,13 +217,13 @@ public class Guardian : MonoBehaviour
     }
 
     void Reset(){
-        Vector3 treePos = lastRespawnLocation.transform.position;
+        animator.SetBool("isDead", false);
 
-        this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 2f, treePos.z);
+        Vector3 treePos = lastRespawnLocation.transform.position;
+        this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 1.5f, treePos.z);
 
         EnableMovement();
         SetAllCollidersAndRbStatus(true);
-        animator.SetBool("isDead", false);
 
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth);
