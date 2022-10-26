@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Guardian : MonoBehaviour
 {
     [SerializeField] GameObject boltPrefab;
     [SerializeField] GameObject lastRespawnLocation;
     [SerializeField] AudioClip[] meleeSounds;
+	[SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
+    [SerializeField] private LayerMask m_WhatIsGround; // A mask determining what is ground to the character
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpForce = 800f;
     [SerializeField] float flashTime = 0.2f;
@@ -20,6 +23,12 @@ public class Guardian : MonoBehaviour
 	public float attackRange = 0.5f;
 	public LayerMask enemyLayers;
 
+	[Header("Events")]
+	[Space]
+	public UnityEvent OnLandEvent;
+
+	
+	const float k_GroundedRadius = .1f; // Radius of the overlap circle to determine if grounded
     private Renderer rend;
     private Color startColor;
     private Rigidbody2D rb;
@@ -28,8 +37,8 @@ public class Guardian : MonoBehaviour
     private float dirX = 0f;
     private float fallTolerance = -3f;
     private float attackStaggerTime = 0.5f;
-    private float tolerance = 0.01f;
     private bool isMovementEnabled = true;
+	private bool m_Grounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private bool isDamageEnabled = true;
     private Coroutine attackCoroutine = null;
@@ -48,14 +57,24 @@ public class Guardian : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         localScale = transform.localScale;
+
+		if(OnLandEvent == null)
+			OnLandEvent = new UnityEvent();
     }
 
     void Update(){
-        if (Input.GetButtonDown("Jump") && isMovementEnabled && Mathf.Abs(rb.velocity.y) < tolerance)
-            rb.AddForce(Vector2.up * jumpForce);
-
-        if (isMovementEnabled)
+        if (isMovementEnabled){
             dirX = Input.GetAxisRaw("Horizontal") * moveSpeed;
+
+            if (Input.GetButtonDown("Jump") && m_Grounded){
+                Debug.Log("JUMP");
+                rb.AddForce(Vector2.up * jumpForce);
+                animator.SetBool("isJumping", true);
+
+                StartCoroutine("SetIsGroundedFalseLate");
+                // m_Grounded = false;
+            }
+        }
 
         SetAnimationState();
     }
@@ -63,22 +82,42 @@ public class Guardian : MonoBehaviour
     void FixedUpdate(){
         if (isMovementEnabled)
             rb.velocity = new Vector2(dirX, rb.velocity.y);
+            
+    
+		bool wasGrounded = m_Grounded;
+		m_Grounded = false;
+
+		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
+		for(int i = 0; i < colliders.Length; i++){
+			if(colliders[i].gameObject != gameObject){
+				m_Grounded = true;
+				
+				if(!wasGrounded){
+					OnLandEvent.Invoke();
+                }
+			}
+		}
     }
 
     void LateUpdate(){
         CheckWhereToFace();
     }
 
+	public void OnLanding(){
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
+
+		Debug.Log("LAND");
+        animator.SetBool("isJumping", false);
+        animator.SetBool("isFalling", false);
+	}
+    
     void SetAnimationState(){
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
-        if (Mathf.Abs(rb.velocity.y) < tolerance){
-            animator.SetBool("isJumping", false);
-            animator.SetBool("isFalling", false);
-        }
-
-        if (Input.GetButton("Slide") && absX > tolerance){
+        if (Input.GetButton("Slide")){
             animator.SetBool("isSliding", true);
             Debug.Log("SLIDE WEEE");
         }
@@ -86,10 +125,7 @@ public class Guardian : MonoBehaviour
             animator.SetBool("isSliding", false);
         }
 
-        if (Input.GetButtonDown("Jump") && isMovementEnabled){
-            animator.SetBool("isJumping", true);
-        }
-
+        // Transition from jumping to falling animation
         if (rb.velocity.y < fallTolerance){
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", true);
@@ -203,7 +239,6 @@ public class Guardian : MonoBehaviour
         }
         else if (layerName == "Drop"){
             Die();
-            // Reset();
         }
         else if (layerName == "Essence"){
             Reset();
@@ -291,5 +326,10 @@ public class Guardian : MonoBehaviour
 
         EnableMovement(false);
         animator.SetInteger("nextAttackState", (int)AttackStates.NONE);
+    }
+    IEnumerator SetIsGroundedFalseLate(){
+        yield return new WaitForSeconds(0.02f);
+
+        m_Grounded = false;
     }
 }
