@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class Guardian : MonoBehaviour
 {
     [SerializeField] GameObject boltPrefab;
+    [SerializeField] GameObject teleportPrefab;
     [SerializeField] GameObject lastRespawnLocation;
     [SerializeField] AudioClip[] meleeSounds;
 	[SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
@@ -28,7 +29,10 @@ public class Guardian : MonoBehaviour
 	[Space]
 	public UnityEvent OnLandEvent;
 
-	
+	// var myQueue = new Queue<GameObject>();
+    // myQueue.Enqueue(5);
+    // V = myQueue.Dequeue();  // returns 100
+
 	const float k_GroundedRadius = .1f; // Radius of the overlap circle to determine if grounded
     private Renderer rend;
     private Color startColor;
@@ -135,6 +139,12 @@ public class Guardian : MonoBehaviour
         if (Input.GetButtonDown("Revive") && animator.GetBool("isDead")){
             Reset();
         }
+        
+        Vector2 player = this.gameObject.transform.position;
+        if (Input.GetButtonDown("Skill_Teleport")){
+            Debug.Log("TELEPORT");
+            GameObject teleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.309f, 0f), Quaternion.identity);
+        }
 
         AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
         string animationName = animCurrentClipInfo[0].clip.name;
@@ -149,7 +159,6 @@ public class Guardian : MonoBehaviour
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");
 
-            Vector2 player = this.gameObject.transform.position;
             if (facingRight){
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
                 bolt.SendMessage("SetVelocity", "right");

@@ -25207,11 +25207,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400933, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 3.4117646
+      value: 1.882353
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400933, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 2.8235295
+      value: 1.882353
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400942, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_Size.x
@@ -25245,6 +25245,10 @@ PrefabInstance:
       propertyPath: m_GroundCheck
       value: 
       objectReference: {fileID: 309675382}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: teleportPrefab
+      value: 
+      objectReference: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: lastRespawnLocation
       value: 
