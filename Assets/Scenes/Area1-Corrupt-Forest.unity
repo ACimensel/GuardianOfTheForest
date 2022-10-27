@@ -24873,7 +24873,7 @@ MonoBehaviour:
   flashTime: 0.2
   patrolSpeed: 5.4
   walkSpeed: 6.2
-  health: 5
+  health: 50
   isFlipped: 0
   facingRight: 0
   player: {fileID: 1255839349}

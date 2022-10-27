@@ -9,7 +9,7 @@ public class Deer : MonoBehaviour
 
     public float patrolSpeed = 5f;
     public float walkSpeed = 3.5f;
-    public int health = 5;
+    public int health = 50;
     public bool isFlipped = false;
     public bool facingRight = false;
     public Transform player;
@@ -76,8 +76,8 @@ public class Deer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-		if(LayerMask.LayerToName(col.gameObject.layer) == "PlayerAttack" && isDamageEnabled){
-            TakeDamage(1); // TODO change damage of ranged projectile, or make projectile call TakeDamage() and get rid of OnTriggerEnter
+		if(LayerMask.LayerToName(col.gameObject.layer) == "PlayerBolt" && isDamageEnabled){
+            TakeDamage(Bolt.boltDamage); // TODO change damage of ranged projectile, or make projectile call TakeDamage() and get rid of OnTriggerEnter
         }
         else if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
         {

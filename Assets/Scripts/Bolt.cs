@@ -6,6 +6,7 @@ public class Bolt : MonoBehaviour
 {
     [SerializeField] float destroyTime = 5f;
     [SerializeField] float moveSpeed = 10f;
+    public const int boltDamage = 5;
 
     void Start()
     {

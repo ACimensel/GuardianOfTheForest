@@ -17,6 +17,7 @@ public class Guardian : MonoBehaviour
     [SerializeField] float invulnerabilityTime = 3f;
     [SerializeField] int currentHealth = 4;
     [SerializeField] int maxHealth = 4;
+    [SerializeField] int meleeDamage = 10;
 
     public HealthBar healthBar;
 	public Transform attackPoint;
@@ -188,7 +189,7 @@ public class Guardian : MonoBehaviour
 
 			Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 			foreach(Collider2D enemy in hitEnemies){
-				enemy.GetComponent<Deer>().TakeDamage(1);
+				enemy.GetComponent<Deer>().TakeDamage(meleeDamage);
 			}
         }
     }
@@ -273,7 +274,7 @@ public class Guardian : MonoBehaviour
     void DisableMovement(bool stagger = true){
         if(stagger)
             animator.SetBool("isStaggered", true);
-            
+
         isMovementEnabled = false;
         dirX = 0;
 
