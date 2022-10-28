@@ -6,18 +6,16 @@ using UnityEngine.UI;
 public class AttackUI : MonoBehaviour
 {
 
-    public Sprite meleeImg0;
-    public Sprite meleeImg1;
-    public Sprite meleeImg2;
-    public Sprite meleeImg3;
-    public Sprite rangedImg0;
+    [SerializeField] Sprite meleeImg0;
+    [SerializeField] Sprite meleeImg1;
+    [SerializeField] Sprite meleeImg2;
+    [SerializeField] Sprite meleeImg3;
+    [SerializeField] Sprite rangedImg0;
 
     private Image rangedIcon;
     private Image meleePlaceholder;
     private Image rangedPlaceholder;
     private AnimatorClipInfo[] guardianAnimator;
-
-    private float meele1Time = 12.0f;
 
     private string currentAnimation;
 
