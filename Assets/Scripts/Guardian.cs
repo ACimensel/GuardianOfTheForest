@@ -262,7 +262,7 @@ public class Guardian : MonoBehaviour
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
         Debug.Log("Hit by layer: " + layerName);
 
-        if (layerName == "Enemy" && isDamageEnabled)
+        if (layerName == "EnemyAttack" && isDamageEnabled)
         {
             isDamageEnabled = false;
             DisableMovement();
