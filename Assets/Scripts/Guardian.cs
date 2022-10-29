@@ -50,6 +50,8 @@ public class Guardian : MonoBehaviour
     public bool isRangedEnabled = true;
     private Coroutine attackCoroutine = null;
 
+    public GameManager gameManager;
+
     enum AttackStates
     {
         NONE = 0,
@@ -303,7 +305,7 @@ public class Guardian : MonoBehaviour
 
         SetAllCollidersAndRbStatus(false);
         animator.SetBool("isDead", true);
-
+        gameManager.GameOver();
         currentHealth = 0;
         healthBar.SetHealth(currentHealth);
     }
@@ -311,6 +313,7 @@ public class Guardian : MonoBehaviour
     void Reset()
     {
         animator.SetBool("isDead", false);
+        gameManager.Revive();
 
         Vector3 treePos = lastRespawnLocation.transform.position;
         this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 1.5f, treePos.z);
