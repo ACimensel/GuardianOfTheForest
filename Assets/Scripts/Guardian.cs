@@ -16,7 +16,7 @@ public class Guardian : MonoBehaviour
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
-    [SerializeField] float rangedCooldownTime = 3f;
+    [SerializeField] public float rangedCooldownTime = 3f;
     [SerializeField] int currentHealth = 4;
     [SerializeField] int maxHealth = 4;
     [SerializeField] int meleeDamage = 10;
@@ -47,7 +47,7 @@ public class Guardian : MonoBehaviour
     private bool m_Grounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private bool isDamageEnabled = true;
-    private bool isRangedEnabled = true;
+    public bool isRangedEnabled = true;
     private Coroutine attackCoroutine = null;
 
     enum AttackStates
@@ -193,8 +193,9 @@ public class Guardian : MonoBehaviour
             }
 
             // cooldown
-            isRangedEnabled = false;
             StartCoroutine("RangedCooldown");
+            isRangedEnabled = false;
+
         }
 
         if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3)
