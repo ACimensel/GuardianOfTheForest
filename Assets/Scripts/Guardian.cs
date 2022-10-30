@@ -91,9 +91,8 @@ public class Guardian : MonoBehaviour
 
             if(isGrounded)
                 coyoteTimeCounter = coyoteTime;
-            else if(coyoteTimeCounter)
+            else
                 coyoteTimeCounter -= Time.deltaTime;
-
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f){ 
                 Debug.Log("JUMP");
