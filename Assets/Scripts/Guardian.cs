@@ -132,10 +132,14 @@ public class Guardian : MonoBehaviour
 		}
 
 		isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
-        if(isTouchingFront && !isGrounded && dirX != 0)
+        if(isTouchingFront && !isGrounded && dirX != 0){
             wallSliding = true;
-        else
+            animator.SetBool("isWallSliding", true);
+        }
+        else{
             wallSliding = false;
+            animator.SetBool("isWallSliding", false);
+        }
 
         if(wallSliding)
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, wallSlidingSpeed, float.MaxValue));
