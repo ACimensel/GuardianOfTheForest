@@ -10,7 +10,7 @@ public class Shield : MonoBehaviour
     private GameObject shield;
     private float timeLeft;
     private float cooldownTime;
-    private bool isShieldActive;
+    public bool isShieldActive;
     private bool isCoolingDown;
     private Animator animator;
 
@@ -19,6 +19,7 @@ public class Shield : MonoBehaviour
     private Image shieldHolder;
     private Image shieldImg;
 
+    Guardian guardian;
 
     void Awake()
     {
@@ -34,6 +35,7 @@ public class Shield : MonoBehaviour
         shieldTimer.text = "";
         shieldHolder = GameObject.Find("ShieldHolder").GetComponent<Image>();
         shieldImg = GameObject.Find("ShieldImg").GetComponent<Image>();
+        guardian = GameObject.Find("Guardian").GetComponent<Guardian>();
     }
 
     void Start()
@@ -65,6 +67,8 @@ public class Shield : MonoBehaviour
         {
             animator.SetTrigger("shieldEnded");
             isShieldActive = false;
+            guardian.isDamageEnabled = true;
+
             timeLeft = 3f;
             isCoolingDown = true;
         }
@@ -106,6 +110,7 @@ public class Shield : MonoBehaviour
         {
             shield.SetActive(true);
             isShieldActive = true;
+            guardian.isDamageEnabled = false;
         }
         if (isShieldActive)
         {

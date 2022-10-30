@@ -46,7 +46,7 @@ public class Guardian : MonoBehaviour
     private bool isMovementEnabled = true;
     private bool m_Grounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
-    private bool isDamageEnabled = true;
+    public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
     private Coroutine attackCoroutine = null;
 
