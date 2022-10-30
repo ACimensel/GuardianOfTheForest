@@ -15,6 +15,7 @@ public class Guardian : MonoBehaviour
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
+    [SerializeField] public float rangedCooldownTime = 3f;
     [SerializeField] int currentHealth = 4;
     [SerializeField] int maxHealth = 4;
     [SerializeField] int meleeDamage = 10;
@@ -59,7 +60,8 @@ public class Guardian : MonoBehaviour
     private bool isMovementEnabled = true;
 	private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
-    private bool isDamageEnabled = true;
+    public bool isDamageEnabled = true;
+    public bool isRangedEnabled = true;
     private Coroutine attackCoroutine = null;
 
     enum AttackStates{

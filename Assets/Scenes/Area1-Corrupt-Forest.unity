@@ -323,7 +323,7 @@ GameObject:
   m_Component:
   - component: {fileID: 114929597}
   - component: {fileID: 114929599}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: DetectRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26271,6 +26271,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 794415743}
   m_CullTransparentMesh: 1
+--- !u!1 &816064582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 816064583}
+  m_Layer: 0
+  m_Name: Front Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &816064583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816064582}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.267, y: -0.084, z: 0.4385982}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1255839349}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &822399511
 GameObject:
   m_ObjectHideFlags: 0
@@ -26617,7 +26648,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1255839349}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &919643358
 SpriteRenderer:
@@ -28123,6 +28154,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6152777332188520560}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: jumpForce
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: frontCheck
+      value: 
+      objectReference: {fileID: 816064583}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: xWallForce
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: yWallForce
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: attackRange
       value: 0.9
       objectReference: {fileID: 0}
@@ -28130,6 +28177,14 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 632914722}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: groundCheck
+      value: 
+      objectReference: {fileID: 309675382}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: wallJumpTime
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_GroundCheck
       value: 
@@ -28139,9 +28194,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: wallSlidingSpeed
+      value: -0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: lastRespawnLocation
       value: 
       objectReference: {fileID: 959443744}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: whatIsGround.m_Bits
+      value: 262144
+      objectReference: {fileID: 0}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_WhatIsGround.m_Bits
       value: 262144
@@ -31702,6 +31765,10 @@ PrefabInstance:
     - target: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
       propertyPath: m_Name
       value: TeleportSkill
+      objectReference: {fileID: 0}
+    - target: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2939313765097063020, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
       propertyPath: m_RootOrder
