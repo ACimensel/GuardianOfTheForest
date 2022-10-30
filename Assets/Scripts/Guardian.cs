@@ -28,8 +28,6 @@ public class Guardian : MonoBehaviour
     [SerializeField] float jumpForce = 15f;
     [SerializeField] float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
-    [SerializeField] float jumpBufferTime = 0.2f;
-    private float jumpBufferCounter;
 
 	[Header("Wall Jumping Parameters")] [Space]
     public Transform frontCheck;
