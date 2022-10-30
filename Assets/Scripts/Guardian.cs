@@ -9,10 +9,9 @@ public class Guardian : MonoBehaviour
     [SerializeField] GameObject teleportPrefab;
     [SerializeField] GameObject lastRespawnLocation;
     [SerializeField] AudioClip[] meleeSounds;
-	[SerializeField] private Transform m_GroundCheck; // A position marking where to check if the player is grounded.
-    [SerializeField] private LayerMask m_WhatIsGround; // A mask determining what is ground to the character
+	[SerializeField] private Transform groundCheck; // A position marking where to check if the player is grounded.
+    [SerializeField] private LayerMask whatIsGround; // A mask determining what is ground to the character
     [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float jumpForce = 800f;
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
@@ -25,25 +24,42 @@ public class Guardian : MonoBehaviour
 	public float attackRange = 0.5f;
 	public LayerMask enemyLayers;
 
-	[Header("Events")]
-	[Space]
+	[Header("Jumping Parameters")] [Space]
+    [SerializeField] float jumpForce = 15f;
+    [SerializeField] float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+    [SerializeField] float jumpBufferTime = 0.2f;
+    private float jumpBufferCounter;
+
+	[Header("Wall Jumping Parameters")] [Space]
+    public Transform frontCheck;
+    public float wallSlidingSpeed = -0.3f;
+    bool isTouchingFront = false;
+    bool wallSliding = false;
+
+    bool wallJumping;
+    public float xWallForce;
+    public float yWallForce;
+    public float wallJumpTime;
+
+	[Header("Events")] [Space]
 	public UnityEvent OnLandEvent;
 
 	// var myQueue = new Queue<GameObject>();
     // myQueue.Enqueue(5);
     // V = myQueue.Dequeue();  // returns 100
 
-	const float k_GroundedRadius = .1f; // Radius of the overlap circle to determine if grounded
     private Renderer rend;
     private Color startColor;
     private Rigidbody2D rb;
     private Animator animator;
     private Vector3 localScale;
+	private float checkRadius = .1f; // Radius of the overlap circle to determine if grounded
     private float dirX = 0f;
-    private float fallTolerance = -3f;
+    private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
     private float attackStaggerTime = 0.5f;
     private bool isMovementEnabled = true;
-	private bool m_Grounded = false; // Whether or not the player is grounded.
+	private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private bool isDamageEnabled = true;
     private Coroutine attackCoroutine = null;
@@ -56,6 +72,7 @@ public class Guardian : MonoBehaviour
         RANGED,
     }
 
+
     void Awake(){
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
@@ -67,48 +84,83 @@ public class Guardian : MonoBehaviour
 			OnLandEvent = new UnityEvent();
     }
 
+
     void Update(){
         if (isMovementEnabled){
             dirX = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
-            if (Input.GetButtonDown("Jump") && m_Grounded){
+            if(isGrounded)
+                coyoteTimeCounter = coyoteTime;
+            else if(coyoteTimeCounter)
+                coyoteTimeCounter -= Time.deltaTime;
+
+
+            if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f){ 
                 Debug.Log("JUMP");
-                rb.AddForce(Vector2.up * jumpForce);
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
                 StartCoroutine("SetIsGroundedFalseLate");
-                // m_Grounded = false;
+            }
+            
+            if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f){ // long press jump
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+                coyoteTimeCounter = 0f;
             }
         }
 
         SetAnimationState();
     }
 
-    void FixedUpdate(){
-        if (isMovementEnabled)
-            rb.velocity = new Vector2(dirX, rb.velocity.y);
-            
-    
-		bool wasGrounded = m_Grounded;
-		m_Grounded = false;
 
-		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
+    void FixedUpdate(){
+        if (isMovementEnabled){
+            rb.velocity = new Vector2(dirX, rb.velocity.y);
+        }
+    
+		bool wasGrounded = isGrounded;
+		isGrounded = false;
+
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, checkRadius, whatIsGround);
 		for(int i = 0; i < colliders.Length; i++){
 			if(colliders[i].gameObject != gameObject){
-				m_Grounded = true;
+				isGrounded = true;
 				
 				if(!wasGrounded){
 					OnLandEvent.Invoke();
                 }
 			}
 		}
+
+		isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
+        if(isTouchingFront && !isGrounded && dirX != 0)
+            wallSliding = true;
+        else
+            wallSliding = false;
+
+        if(wallSliding)
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, wallSlidingSpeed, float.MaxValue));
+
+        if(Input.GetButtonDown("Jump") && wallSliding){
+            wallJumping = true;
+            Invoke("SetWallJumpingToFalse", wallJumpTime);
+        }
+
+        if(wallJumping){
+            rb.velocity = new Vector2(xWallForce * -dirX, yWallForce); // TODO change this to add force
+        }
     }
+
 
     void LateUpdate(){
         CheckWhereToFace();
     }
+
+
+    void SetWallJumpingToFalse(){
+        wallJumping = false; // TODO reset this on wall touch
+    }
+
 
 	public void OnLanding(){
         rb.velocity = new Vector2(rb.velocity.x, 0f);
@@ -118,6 +170,7 @@ public class Guardian : MonoBehaviour
         animator.SetBool("isFalling", false);
 	}
     
+
     void SetAnimationState(){
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
@@ -203,11 +256,13 @@ public class Guardian : MonoBehaviour
         }
     }
 
+
 	void OnDrawGizmosSelected(){
 		if(attackPoint == null)
 			return;
 		Gizmos.DrawWireSphere(attackPoint.position, attackRange);
 	}
+
 
     void CheckWhereToFace(){
         if (dirX > 0)
@@ -220,6 +275,7 @@ public class Guardian : MonoBehaviour
 
         transform.localScale = localScale;
     }
+
 
     void OnTriggerEnter2D(Collider2D col){
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
@@ -255,6 +311,7 @@ public class Guardian : MonoBehaviour
         }
     }
 
+
     void Die(){
         rb.velocity = Vector2.zero;
         isMovementEnabled = false;
@@ -266,6 +323,7 @@ public class Guardian : MonoBehaviour
         currentHealth = 0;
         healthBar.SetHealth(currentHealth);
     }
+
 
     void Reset(){
         animator.SetBool("isDead", false);
@@ -280,6 +338,7 @@ public class Guardian : MonoBehaviour
         healthBar.SetHealth(currentHealth);
     }
 
+
     void DisableMovement(bool stagger = true){
         if(stagger)
             animator.SetBool("isStaggered", true);
@@ -287,9 +346,10 @@ public class Guardian : MonoBehaviour
         isMovementEnabled = false;
         dirX = 0;
 
-        if(m_Grounded)
+        if(isGrounded)
             rb.velocity = new Vector2(0f, rb.velocity.y);
     }
+
 
     void EnableMovement(bool wasStaggered = true){
         if (wasStaggered)
@@ -297,12 +357,14 @@ public class Guardian : MonoBehaviour
         isMovementEnabled = true;
     }
 
+
     void SetAllCollidersAndRbStatus(bool active){
         GetComponent<Rigidbody2D>().isKinematic = !active;
 
         foreach (Collider2D c in GetComponents<Collider2D>())
             c.enabled = active;
     }
+
 
     IEnumerator BecomeInvulnerable(){
         animator.SetTrigger("Hurt");
@@ -316,6 +378,7 @@ public class Guardian : MonoBehaviour
         isDamageEnabled = true;
     }
 
+
     IEnumerator Flash(){
         startColor.a = 0.6f;
         float delta = 0.2f;
@@ -328,11 +391,13 @@ public class Guardian : MonoBehaviour
         }
     }
 
+
     IEnumerator EnableMovementDelayed(){
         yield return new WaitForSeconds(hitStaggerTime);
 
         EnableMovement();
     }
+
 
     IEnumerator WaitForAttackFinish(){
         yield return new WaitForSeconds(attackStaggerTime);
@@ -340,9 +405,11 @@ public class Guardian : MonoBehaviour
         EnableMovement(false);
         animator.SetInteger("nextAttackState", (int)AttackStates.NONE);
     }
+
+
     IEnumerator SetIsGroundedFalseLate(){
         yield return new WaitForSeconds(0.02f);
 
-        m_Grounded = false;
+        isGrounded = false;
     }
 }
