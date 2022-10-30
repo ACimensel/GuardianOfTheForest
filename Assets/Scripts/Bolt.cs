@@ -8,41 +8,36 @@ public class Bolt : MonoBehaviour
     [SerializeField] float moveSpeed = 10f;
     public const int boltDamage = 5;
 
-    void Start()
-    {
+    void Start(){
         StartCoroutine("DestroyAfterTime");
     }
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "Enemy")
-        {
+    void OnTriggerEnter2D(Collider2D col){
+        string layerName = LayerMask.LayerToName(col.gameObject.layer);
+
+        if (layerName == "Enemy" || layerName == "Ground"){
             Destroy(this.gameObject);
         }
     }
 
-    IEnumerator DestroyAfterTime()
-    {
+    IEnumerator DestroyAfterTime(){
         yield return new WaitForSeconds(destroyTime);
 
         Destroy(this.gameObject);
     }
 
-    void SetVelocity(string direction)
-    {
+    void SetVelocity(string direction){
         if (direction == "right")
             GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, 0f);
         else if (direction == "left")
             GetComponent<Rigidbody2D>().velocity = new Vector2(-moveSpeed, 0f);
     }
 
-    void GoRight()
-    {
+    void GoRight(){
         GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, 0f);
     }
 
-    void GoLeft()
-    {
+    void GoLeft(){
         GetComponent<Rigidbody2D>().velocity = new Vector2(-moveSpeed, 0f);
     }
 }
