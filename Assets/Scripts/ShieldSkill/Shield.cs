@@ -14,7 +14,7 @@ public class Shield : MonoBehaviour
     private bool isCoolingDown;
     private Animator animator;
 
-    [SerializeField] float shieldHealth;
+    [SerializeField] public float shieldHealth;
     private TMP_Text shieldTimer;
     private Image shieldHolder;
     private Image shieldImg;
@@ -26,7 +26,7 @@ public class Shield : MonoBehaviour
         shield = GameObject.Find("Shield");
         shield.SetActive(false);
         isShieldActive = false;
-        timeLeft = 3f;
+        timeLeft = 6f;
         cooldownTime = 12f;
         isCoolingDown = false;
         animator = shield.GetComponent<Animator>();
@@ -48,28 +48,31 @@ public class Shield : MonoBehaviour
         UpdateShieldImg();
     }
 
-    void OnTriggerEnter2D(Collider2D col)
-    {
-        if (LayerMask.LayerToName(col.gameObject.layer) != "dne")
-        {
-            Physics2D.IgnoreCollision(col.GetComponent<Collider2D>(), shield.GetComponent<Collider2D>());
-        }
-    }
-
-
     void ShieldCountdown()
     {
         if (timeLeft > 0f)
         {
             timeLeft -= Time.deltaTime;
+
+            if (shieldHealth <= 0)
+            {
+                animator.SetTrigger("shieldEnded");
+                isShieldActive = false;
+                guardian.isDamageEnabled = true;
+                shieldHealth = 3f;
+
+                timeLeft = 6f;
+                isCoolingDown = true;
+            }
         }
         else
         {
             animator.SetTrigger("shieldEnded");
             isShieldActive = false;
             guardian.isDamageEnabled = true;
+            shieldHealth = 3f;
 
-            timeLeft = 3f;
+            timeLeft = 6f;
             isCoolingDown = true;
         }
     }
@@ -77,11 +80,12 @@ public class Shield : MonoBehaviour
     void CooldownCountdown()
     {
         shieldTimer.text = cooldownTime.ToString("F0");
-        Debug.Log("COOL: " + cooldownTime);
         if (cooldownTime > 0f)
         {
             cooldownTime -= Time.deltaTime;
-        } else {
+        }
+        else
+        {
             isCoolingDown = false;
         }
     }
