@@ -50,11 +50,9 @@ public class Shield : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) != "EnemyAttack")
+        if (LayerMask.LayerToName(col.gameObject.layer) != "dne")
         {
             Physics2D.IgnoreCollision(col.GetComponent<Collider2D>(), shield.GetComponent<Collider2D>());
-        } else {
-            Debug.Log("Hit");
         }
     }
 
