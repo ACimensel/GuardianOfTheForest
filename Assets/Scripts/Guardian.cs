@@ -24,17 +24,9 @@ public class Guardian : MonoBehaviour
 	public Transform attackPoint;
 	public float attackRange = 0.5f;
 	public LayerMask enemyLayers;
-
-	[Header("Jumping Parameters")] [Space]
-    [SerializeField] float jumpForce = 15f;
-    [SerializeField] float coyoteTime = 0.2f;
-    private float coyoteTimeCounter;
-
-	[Header("Wall Jumping Parameters")] [Space]
-    public Transform frontCheck;
-    public float wallSlidingSpeed = -0.3f;
-    bool isTouchingFront = false;
-    bool wallSliding = false;
+    public bool isDamageEnabled = true;
+    public bool isRangedEnabled = true;
+    public GameManager gameManager;
 
     bool wallJumping;
     public float xWallForce;
@@ -60,11 +52,20 @@ public class Guardian : MonoBehaviour
     private bool isMovementEnabled = true;
 	private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
-    public bool isDamageEnabled = true;
-    public bool isRangedEnabled = true;
     private Coroutine attackCoroutine = null;
 
-    enum AttackStates{
+	[Header("Jumping Parameters")] [Space]
+    [SerializeField] float jumpForce = 15f;
+    [SerializeField] float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
+	[Header("Wall Jumping Parameters")] [Space]
+    public Transform frontCheck;
+    public float wallSlidingSpeed = -0.3f;
+    bool isTouchingFront = false;
+    bool wallSliding = false;
+
+    public enum AttackStates{
         NONE = 0,
         MELEE1,
         MELEE2,
@@ -95,7 +96,7 @@ public class Guardian : MonoBehaviour
                 coyoteTimeCounter -= Time.deltaTime;
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f){ 
-                Debug.Log("JUMP");
+                // Debug.Log("JUMP");
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -114,9 +115,10 @@ public class Guardian : MonoBehaviour
 
     void FixedUpdate(){
         if (isMovementEnabled){
-            rb.velocity = new Vector2(dirX, rb.velocity.y);
+            rb.velocity = new Vector2(dirX, rb.velocity.y); // TODO add smoothness?
         }
     
+        // Check if guardian is on the ground and if just landed
 		bool wasGrounded = isGrounded;
 		isGrounded = false;
 
@@ -131,6 +133,7 @@ public class Guardian : MonoBehaviour
 			}
 		}
 
+        // Is guardian wall sliding? play right animation
 		isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
         if(isTouchingFront && !isGrounded && dirX != 0){
             wallSliding = true;
@@ -141,15 +144,13 @@ public class Guardian : MonoBehaviour
             animator.SetBool("isWallSliding", false);
         }
 
+        // if sliding, limit y velocity
         if(wallSliding)
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, wallSlidingSpeed, float.MaxValue));
 
-        if(Input.GetButtonDown("Jump") && wallSliding){
-            wallJumping = true;
-            Invoke("SetWallJumpingToFalse", wallJumpTime);
-        }
-
+        // wall jump
         if(wallJumping){
+            Debug.Log("JUMPING");
             rb.velocity = new Vector2(xWallForce * -dirX, yWallForce); // TODO change this to add force
         }
     }
@@ -161,7 +162,8 @@ public class Guardian : MonoBehaviour
 
 
     void SetWallJumpingToFalse(){
-        wallJumping = false; // TODO reset this on wall touch
+        Debug.Log("SET");
+        wallJumping = false; // TODO reset this on wall touch?
     }
 
 
@@ -178,6 +180,7 @@ public class Guardian : MonoBehaviour
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
+        // Slide
         if (Input.GetButton("Slide")){
             animator.SetBool("isSliding", true);
             Debug.Log("SLIDE WEEE");
@@ -192,19 +195,19 @@ public class Guardian : MonoBehaviour
             animator.SetBool("isFalling", true);
         }
 
+        // Revive
         if (Input.GetButtonDown("Revive") && animator.GetBool("isDead")){
             Reset();
         }
         
+        // Use teleport skill
         Vector2 player = this.gameObject.transform.position;
         if (Input.GetButtonDown("Skill_Teleport")){
             Debug.Log("TELEPORT");
             GameObject teleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.309f, 0f), Quaternion.identity);
         }
 
-        AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-        string animationName = animCurrentClipInfo[0].clip.name;
-
+        // Ranged attack
         if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE){
             DisableMovement(false);
 
@@ -226,14 +229,13 @@ public class Guardian : MonoBehaviour
                 bolt.SendMessage("SetVelocity", "left");
             }
         }
-
+        
+        // Melee attack
         if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3){
             DisableMovement(false);
 
-            // TODO move into its own script which gets called in attack states
-            AudioSource audioSrc = GetComponent<AudioSource>();
-            audioSrc.clip = meleeSounds[Random.Range(0, meleeSounds.Length)];
-            audioSrc.Play();
+            AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+            string animationName = animCurrentClipInfo[0].clip.name;
             
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
@@ -247,17 +249,36 @@ public class Guardian : MonoBehaviour
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE3);
                 animator.SetTrigger("MeleeAttack2");
             }
-            else{
+            else if (animationName != "Guardian_melee3"){
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE1);
                 animator.SetTrigger("MeleeAttack1");
             }
 
+            //TODO need to refactor how melee hits work
 			Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 			foreach(Collider2D enemy in hitEnemies){
 				enemy.GetComponent<Deer>().TakeDamage(meleeDamage);
 			}
         }
+
+        // wall jump
+        if(Input.GetButtonDown("Jump")){
+            Debug.Log("I WANT TO JUMP");
+        }
+
+        if(Input.GetButtonDown("Jump") && wallSliding){
+            Debug.Log("OK LETS JUMP");
+            wallJumping = true;
+            Invoke("SetWallJumpingToFalse", wallJumpTime);
+        }
     }
+
+
+	public void PlayMeleeAttackSounds(){
+        AudioSource audioSrc = GetComponent<AudioSource>();
+        audioSrc.clip = meleeSounds[Random.Range(0, meleeSounds.Length)];
+        audioSrc.Play();
+	}
 
 
 	void OnDrawGizmosSelected(){
@@ -325,6 +346,7 @@ public class Guardian : MonoBehaviour
 
         currentHealth = 0;
         healthBar.SetHealth(currentHealth);
+        gameManager.GameOver();
     }
 
 
@@ -339,12 +361,12 @@ public class Guardian : MonoBehaviour
 
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth);
+        gameManager.Revive();
     }
 
 
     void DisableMovement(bool stagger = true){
-        if(stagger)
-            animator.SetBool("isStaggered", true);
+        animator.SetBool("isStaggered", stagger);
 
         isMovementEnabled = false;
         dirX = 0;
