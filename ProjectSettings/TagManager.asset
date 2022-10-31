@@ -41,6 +41,9 @@ TagManager:
   - name: Background
     uniqueID: 3909278467
     locked: 0
+  - name: Traps
+    uniqueID: 3720810423
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
