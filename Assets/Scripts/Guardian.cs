@@ -9,8 +9,10 @@ public class Guardian : MonoBehaviour
     [SerializeField] GameObject teleportPrefab;
     [SerializeField] GameObject lastRespawnLocation;
     [SerializeField] AudioClip[] meleeSounds;
-	[SerializeField] private Transform groundCheck; // A position marking where to check if the player is grounded.
-    [SerializeField] private LayerMask whatIsGround; // A mask determining what is ground to the character
+	[SerializeField] Transform groundCheck; // A position marking where to check if the player is grounded.
+    [SerializeField] LayerMask whatIsGround; // A mask determining what is ground to the character
+	[SerializeField] LayerMask enemyLayers;
+    [SerializeField] GameManager gameManager;
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float flashTime = 0.2f;
     [SerializeField] float hitStaggerTime = 0.2f;
@@ -23,22 +25,11 @@ public class Guardian : MonoBehaviour
     public HealthBar healthBar;
 	public Transform attackPoint;
 	public float attackRange = 0.5f;
-	public LayerMask enemyLayers;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
-    public GameManager gameManager;
-
-    bool wallJumping;
-    public float xWallForce;
-    public float yWallForce;
-    public float wallJumpTime;
 
 	[Header("Events")] [Space]
 	public UnityEvent OnLandEvent;
-
-	// var myQueue = new Queue<GameObject>();
-    // myQueue.Enqueue(5);
-    // V = myQueue.Dequeue();  // returns 100
 
     private Renderer rend;
     private Color startColor;
@@ -53,6 +44,7 @@ public class Guardian : MonoBehaviour
 	private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
+    private Vector3 velocity = Vector3.zero;
 
 	[Header("Jumping Parameters")] [Space]
     [SerializeField] float jumpForce = 15f;
@@ -60,10 +52,19 @@ public class Guardian : MonoBehaviour
     private float coyoteTimeCounter;
 
 	[Header("Wall Jumping Parameters")] [Space]
-    public Transform frontCheck;
-    public float wallSlidingSpeed = -0.3f;
-    bool isTouchingFront = false;
-    bool wallSliding = false;
+    [SerializeField] Transform frontCheck;
+    [SerializeField] float wallSlidingSpeed = -0.3f;
+    [SerializeField] float xWallForce;
+    [SerializeField] float yWallForce;
+    [SerializeField] float delayMove;
+    private bool isTouchingFront = false;
+    private bool wallSliding = false;
+    private bool wallJumping;
+
+	// var myQueue = new Queue<GameObject>();
+    // myQueue.Enqueue(5);
+    // V = myQueue.Dequeue();  // returns 100
+
 
     public enum AttackStates{
         NONE = 0,
@@ -96,7 +97,7 @@ public class Guardian : MonoBehaviour
                 coyoteTimeCounter -= Time.deltaTime;
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f){ 
-                // Debug.Log("JUMP");
+                Debug.Log("JUMP");
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -115,7 +116,13 @@ public class Guardian : MonoBehaviour
 
     void FixedUpdate(){
         if (isMovementEnabled){
-            rb.velocity = new Vector2(dirX, rb.velocity.y); // TODO add smoothness?
+            // Move the character by finding the target velocity
+            Vector3 targetVelocity = new Vector2(dirX, rb.velocity.y);
+            // And then smoothing it out and applying it to the character
+            if(isGrounded)
+                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, 0.03f);
+            else
+                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, 0.15f);
         }
     
         // Check if guardian is on the ground and if just landed
@@ -135,7 +142,7 @@ public class Guardian : MonoBehaviour
 
         // Is guardian wall sliding? play right animation
 		isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
-        if(isTouchingFront && !isGrounded && dirX != 0){
+        if(isTouchingFront && !isGrounded){
             wallSliding = true;
             animator.SetBool("isWallSliding", true);
         }
@@ -145,25 +152,27 @@ public class Guardian : MonoBehaviour
         }
 
         // if sliding, limit y velocity
-        if(wallSliding)
-            rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, wallSlidingSpeed, float.MaxValue));
+        if(wallSliding){
+            rb.velocity = new Vector2(0f, Mathf.Clamp(rb.velocity.y, wallSlidingSpeed, float.MaxValue));
+        }
 
         // wall jump
         if(wallJumping){
-            Debug.Log("JUMPING");
-            rb.velocity = new Vector2(xWallForce * -dirX, yWallForce); // TODO change this to add force
+            if(facingRight){
+                rb.AddForce(new Vector3(-xWallForce, yWallForce, 0f));
+                facingRight = false;
+            }
+            else{
+                rb.AddForce(new Vector3(xWallForce, yWallForce, 0f));
+                facingRight = true;
+            }
+            wallJumping = false;
         }
     }
 
 
     void LateUpdate(){
         CheckWhereToFace();
-    }
-
-
-    void SetWallJumpingToFalse(){
-        Debug.Log("SET");
-        wallJumping = false; // TODO reset this on wall touch?
     }
 
 
@@ -208,7 +217,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE){
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding){
             DisableMovement(false);
 
             if (attackCoroutine != null)
@@ -231,7 +240,7 @@ public class Guardian : MonoBehaviour
         }
         
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3){
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding){
             DisableMovement(false);
 
             AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
@@ -261,15 +270,10 @@ public class Guardian : MonoBehaviour
 			}
         }
 
-        // wall jump
-        if(Input.GetButtonDown("Jump")){
-            Debug.Log("I WANT TO JUMP");
-        }
-
+        // Wall jump
         if(Input.GetButtonDown("Jump") && wallSliding){
-            Debug.Log("OK LETS JUMP");
             wallJumping = true;
-            Invoke("SetWallJumpingToFalse", wallJumpTime);
+            StartCoroutine("DisableThenEnableAirMove");
         }
     }
 
@@ -436,5 +440,14 @@ public class Guardian : MonoBehaviour
         yield return new WaitForSeconds(0.02f);
 
         isGrounded = false;
+    }
+
+
+    IEnumerator DisableThenEnableAirMove(){
+        DisableMovement(false);
+        
+        yield return new WaitForSeconds(delayMove);
+
+        EnableMovement(false);
     }
 }
