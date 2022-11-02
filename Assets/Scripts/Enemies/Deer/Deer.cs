@@ -8,7 +8,7 @@ public class Deer : MonoBehaviour
     [SerializeField] float flashTime = 0.2f;
 
     public float patrolSpeed = 5f;
-    public float walkSpeed = 3.5f;
+    public float walkSpeed = 7.5f;
     public int health = 50;
     public bool isFlipped = false;
     public bool facingRight = false;
@@ -76,27 +76,17 @@ public class Deer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-		if(LayerMask.LayerToName(col.gameObject.layer) == "PlayerBolt" && isDamageEnabled){
-            TakeDamage(Bolt.boltDamage); // TODO change damage of ranged projectile, or make projectile call TakeDamage() and get rid of OnTriggerEnter
+		if(LayerMask.LayerToName(col.gameObject.layer) == "PlayerBolt" && isDamageEnabled){   
+            TakeDamage(Bolt.boltDamage); 
         }
-        else if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
-        {
-            animator.SetBool("detectedPlayer", true);
-        }
-        else if (LayerMask.LayerToName(col.gameObject.layer) == "Wall")
+
+        if (LayerMask.LayerToName(col.gameObject.layer) == "Wall")
         {
             transform.Rotate(0f, 180f, 0f);
             facingRight = !facingRight;
         }
     }
 
-    void OnTriggerExit2D(Collider2D col)
-    {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
-        {
-            animator.SetBool("detectedPlayer", false);
-        }
-    }
 
     public void TakeDamage(int damageTaken){
         if(isDamageEnabled){
