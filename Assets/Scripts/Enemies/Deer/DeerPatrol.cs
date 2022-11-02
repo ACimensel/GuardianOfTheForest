@@ -17,6 +17,7 @@ public class DeerPatrol : StateMachineBehaviour
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // change direction based on which way the deer is facing
         if (deer.facingRight) {
             rb.velocity = new Vector2(deer.patrolSpeed, 0f);
         } else {
