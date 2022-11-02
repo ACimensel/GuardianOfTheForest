@@ -209,7 +209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 94571658}
   m_Layer: 5
-  m_Name: Slide
+  m_Name: SlideHint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28746,7 +28746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 506565406}
   m_Layer: 5
-  m_Name: Ranged
+  m_Name: RangedHint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28947,7 +28947,7 @@ GameObject:
   m_Component:
   - component: {fileID: 611412331}
   m_Layer: 5
-  m_Name: Move
+  m_Name: MoveHint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30304,7 +30304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1127490849}
   m_Layer: 5
-  m_Name: Melee
+  m_Name: MeleeHint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31465,7 +31465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1593559849}
   m_Layer: 5
-  m_Name: Jump
+  m_Name: JumpHint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
