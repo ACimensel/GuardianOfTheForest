@@ -13,11 +13,11 @@ public class Tutorial : MonoBehaviour
 
     void Awake()
     {
-        meleeText = GameObject.Find("Melee");
-        moveText = GameObject.Find("Move");
-        rangedText = GameObject.Find("Ranged");
-        slideText = GameObject.Find("Slide");
-        jumpText = GameObject.Find("Jump");
+        meleeText = GameObject.Find("MeleeHint");
+        moveText = GameObject.Find("MoveHint");
+        rangedText = GameObject.Find("RangedHint");
+        slideText = GameObject.Find("SlideHint");
+        jumpText = GameObject.Find("JumpHint");
     }
 
     void Start()
