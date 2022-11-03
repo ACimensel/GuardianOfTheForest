@@ -6,7 +6,7 @@ public class CrowDetectPlayer : MonoBehaviour
 {
 
     private Animator animator;
-    private GameObject crow;
+    public Crow crow;
 
     void Start()
     {
@@ -15,7 +15,6 @@ public class CrowDetectPlayer : MonoBehaviour
 
     void Awake()
     {
-        crow = GameObject.Find("Crow (1)");
         animator = crow.GetComponent<Animator>();
     }
 
