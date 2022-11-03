@@ -38,7 +38,7 @@ public class AttackUI : MonoBehaviour
         rangedTimer.text = "";
     }
 
-    void Start() {}
+    void Start() { }
 
     void Update()
     {

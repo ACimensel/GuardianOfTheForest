@@ -290,6 +290,7 @@ public class Guardian : MonoBehaviour
             {
                 animator.SetInteger("nextAttackState", (int)AttackStates.MELEE2);
                 animator.SetTrigger("MeleeAttack1");
+                animator.SetTrigger("shakeCamera");
             }
             else if (animationName == "Guardian_melee2")
             {
@@ -306,7 +307,15 @@ public class Guardian : MonoBehaviour
             Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
             foreach (Collider2D enemy in hitEnemies)
             {
-                enemy.GetComponent<Deer>().TakeDamage(meleeDamage);
+                if (enemy.GetComponent<Deer>() != null)
+                {
+                    enemy.GetComponent<Deer>().TakeDamage(meleeDamage);
+                }
+                else if (enemy.GetComponent<Crow>() != null)
+                {
+                    enemy.GetComponent<Crow>().TakeDamage(meleeDamage);
+                }
+
             }
         }
 
@@ -407,6 +416,7 @@ public class Guardian : MonoBehaviour
 
     void Reset()
     {
+        isDamageEnabled = true;
         animator.SetBool("isDead", false);
 
         Vector3 treePos = lastRespawnLocation.transform.position;
@@ -513,7 +523,7 @@ public class Guardian : MonoBehaviour
         EnableMovement(false);
     }
 
-     IEnumerator RangedCooldown()
+    IEnumerator RangedCooldown()
     {
         yield return new WaitForSeconds(rangedCooldownTime);
         isRangedEnabled = true;

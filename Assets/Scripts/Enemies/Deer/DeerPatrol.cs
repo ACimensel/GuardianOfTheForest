@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class DeerPatrol : StateMachineBehaviour
 {
-    Transform player;
     Rigidbody2D rb;
     Deer deer;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
         rb = animator.GetComponent<Rigidbody2D>();
         deer = animator.GetComponent<Deer>();
     }
