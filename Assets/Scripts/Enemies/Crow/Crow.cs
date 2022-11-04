@@ -211,6 +211,8 @@ public class Crow : MonoBehaviour
                 animator.SetBool("isDead", true);
                 StartCoroutine("DestroyAfterTime");
                 gameObject.layer = LayerMask.NameToLayer("Dead");
+                
+                GetComponent<DropOrbs>().Drop();
             }
         }
     }

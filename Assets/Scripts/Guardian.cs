@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class Guardian : MonoBehaviour
 {
@@ -22,14 +23,14 @@ public class Guardian : MonoBehaviour
     [SerializeField] int maxHealth = 4;
     [SerializeField] int meleeDamage = 10;
 
+    public TextMeshProUGUI orbCountText;
     public HealthBar healthBar;
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
 
-    [Header("Events")]
-    [Space]
+    [Header("Events")] [Space]
     public UnityEvent OnLandEvent;
 
     private Renderer rend;
@@ -46,6 +47,7 @@ public class Guardian : MonoBehaviour
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
     private Vector3 velocity = Vector3.zero;
+    private int orbCount = 0;
 
     [Header("Jumping Parameters")]
     [Space]
@@ -89,6 +91,8 @@ public class Guardian : MonoBehaviour
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
+        
+        orbCountText.text = orbCount.ToString();
     }
 
 
@@ -398,6 +402,15 @@ public class Guardian : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D col){
+        string layerName = LayerMask.LayerToName(col.gameObject.layer);
+
+        if (layerName == "Orb"){
+            orbCount += 5;
+            orbCountText.text = orbCount.ToString();
+        }
+
+    }
 
     void Die()
     {
