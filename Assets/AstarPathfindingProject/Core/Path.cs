@@ -704,16 +704,16 @@ namespace Pathfinding {
 		/// See: DebugString
 		/// </summary>
 		protected void DebugStringPrefix (PathLog logMode, System.Text.StringBuilder text) {
-			text.Append(error ? "Path Failed : " : "Path Completed : ");
-			text.Append("Computation Time ");
-			text.Append(duration.ToString(logMode == PathLog.Heavy ? "0.000 ms " : "0.00 ms "));
+			// text.Append(error ? "Path Failed : " : "Path Completed : ");
+			// text.Append("Computation Time ");
+			// text.Append(duration.ToString(logMode == PathLog.Heavy ? "0.000 ms " : "0.00 ms "));
 
-			text.Append("Searched Nodes ").Append(searchedNodes);
+			// text.Append("Searched Nodes ").Append(searchedNodes);
 
-			if (!error) {
-				text.Append(" Path Length ");
-				text.Append(path == null ? "Null" : path.Count.ToString());
-			}
+			// if (!error) {
+			// 	text.Append(" Path Length ");
+			// 	text.Append(path == null ? "Null" : path.Count.ToString());
+			// }
 		}
 
 		/// <summary>
@@ -733,7 +733,7 @@ namespace Pathfinding {
 				else text.AppendLine("NULL");
 			}
 
-			text.Append("\nPath Number ").Append(pathID).Append(" (unique id)");
+			// text.Append("\nPath Number ").Append(pathID).Append(" (unique id)");
 		}
 
 		/// <summary>
