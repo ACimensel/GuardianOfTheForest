@@ -24,7 +24,6 @@ public class Shield : MonoBehaviour
     void Awake()
     {
         shield = GameObject.Find("Shield");
-        shield.SetActive(false);
         isShieldActive = false;
         timeLeft = 6f;
         cooldownTime = 12f;
@@ -40,6 +39,8 @@ public class Shield : MonoBehaviour
 
     void Start()
     {
+                shield.SetActive(false);
+
     }
 
     void Update()

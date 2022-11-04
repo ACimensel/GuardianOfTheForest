@@ -17,12 +17,11 @@ public class DetectPlayer : MonoBehaviour
     }
 
     private Animator animator;
-    private GameObject deer;
+    public GameObject deer;
 
 
     void Awake()
     {
-        deer = GameObject.Find("Deer");
         animator = deer.GetComponent<Animator>();
     }
 

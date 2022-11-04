@@ -319,6 +319,9 @@ public class Guardian : MonoBehaviour
                 {
                     enemy.GetComponent<Crow>().TakeDamage(meleeDamage);
                 }
+                else if (enemy.GetComponent<A1Boss>() != null) {
+                    enemy.GetComponent<A1Boss>().TakeDamage(meleeDamage);
+                }
 
             }
         }
