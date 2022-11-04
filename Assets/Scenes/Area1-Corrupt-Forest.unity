@@ -29608,8 +29608,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01779643, y: -0.00000011049359}
-  m_Size: {x: 4.5005245, y: 2.7349787}
+  m_Offset: {x: -0.6426376, y: -0.000000031763726}
+  m_Size: {x: 4.393926, y: 2.7353227}
   m_Direction: 1
 --- !u!50 &751511443
 Rigidbody2D:
@@ -31900,7 +31900,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 62.71
+      value: 60.65
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -34888,7 +34888,7 @@ MonoBehaviour:
   patrolSpeed: 1
   facingRight: 0
   projectilePrefab: {fileID: 3435358240103886122, guid: eef3754063a7a0e46b46ac0011b0e6aa, type: 3}
-  startPjCooldown: 1
+  startPjCooldown: 0.8
   invulnerabilityTime: 1
   flashTime: 0.8
   health: 50

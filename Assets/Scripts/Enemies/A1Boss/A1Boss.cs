@@ -30,6 +30,8 @@ public class A1Boss : MonoBehaviour
     bool detectedPlayer;
     bool isDead;
 
+    Vector3 localScale;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -40,6 +42,7 @@ public class A1Boss : MonoBehaviour
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
         pjCooldown = startPjCooldown;
+        localScale = this.transform.localScale;
     }
 
     void Start()
@@ -91,16 +94,23 @@ public class A1Boss : MonoBehaviour
 
     }
 
+    void LateUpdate()
+    {
+        if (((facingRight) && (localScale.x > 0)) || ((!facingRight) && (localScale.x < 0)))
+        {
+            localScale.x *= -1;
+        }
+        transform.localScale = localScale;
+    }
+
     public void LookAtPlayer()
     {
         if (transform.position.x > player.position.x && facingRight)
         {
-            spriteRenderer.flipX = false;
             facingRight = false;
         }
         else if (transform.position.x < player.position.x && !facingRight)
         {
-            spriteRenderer.flipX = true;
             facingRight = true;
         }
     }
@@ -110,12 +120,10 @@ public class A1Boss : MonoBehaviour
         if (facingRight)
         {
             rb.velocity = new Vector2(patrolSpeed, 0f);
-            spriteRenderer.flipX = true;
         }
         else
         {
             rb.velocity = new Vector2(-patrolSpeed, 0f);
-            spriteRenderer.flipX = false;
         }
     }
 
@@ -155,18 +163,7 @@ public class A1Boss : MonoBehaviour
 
     IEnumerator Flash()
     {
-        startColor.a = 0.6f; IEnumerator BecomeInvulnerable()
-        {
-            animator.SetTrigger("isHurt");
-            Coroutine flash = StartCoroutine("Flash");
-
-            yield return new WaitForSeconds(invulnerabilityTime);
-
-            StopCoroutine(flash);
-            startColor.a = 1f;
-            rend.material.color = startColor;
-            isDamageEnabled = true;
-        }
+        startColor.a = 0.6f;
         float delta = 0.2f;
 
         while (true)
