@@ -124,7 +124,7 @@ MonoBehaviour:
   maxUpForce: 3.5
   minSideForce: -0.4
   maxSideForce: 0.4
-  pickUpRadius: 2
+  pickUpRadius: 5
 --- !u!50 &8143042635513170559
 Rigidbody2D:
   serializedVersion: 4

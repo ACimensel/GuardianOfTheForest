@@ -175,7 +175,7 @@ MonoBehaviour:
   flashTime: 0.2
   patrolSpeed: 5.4
   walkSpeed: 7.5
-  health: 1
+  health: 50
   isFlipped: 0
   facingRight: 0
   player: {fileID: 0}
