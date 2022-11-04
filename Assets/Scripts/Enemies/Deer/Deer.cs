@@ -97,9 +97,15 @@ public class Deer : MonoBehaviour
                 StartCoroutine ("BecomeInvulnerable");
             }
             else{
+                gameObject.layer = LayerMask.NameToLayer("Dead");
+                foreach (Transform child in transform){
+                    child.gameObject.layer = LayerMask.NameToLayer("Dead");
+                }
+
                 animator.SetBool("isDead", true);
                 StartCoroutine("DestroyAfterTime");
-                gameObject.layer = LayerMask.NameToLayer("Dead");
+                
+                GetComponent<DropOrbs>().Drop();
             }
         }
     }

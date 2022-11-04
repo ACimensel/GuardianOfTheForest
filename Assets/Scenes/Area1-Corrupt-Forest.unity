@@ -31374,6 +31374,7 @@ GameObject:
   - component: {fileID: 1263255861}
   - component: {fileID: 1263255865}
   - component: {fileID: 1263255859}
+  - component: {fileID: 1263255867}
   - component: {fileID: 1263255866}
   m_Layer: 13
   m_Name: Deer
@@ -31398,7 +31399,7 @@ MonoBehaviour:
   flashTime: 0.2
   patrolSpeed: 5.4
   walkSpeed: 7.5
-  health: 50
+  health: 1
   isFlipped: 0
   facingRight: 0
   player: {fileID: 1255839349}
@@ -31564,6 +31565,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.49, y: 0.6812395}
   m_EdgeRadius: 0
+--- !u!114 &1263255867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263255858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7297ffec42f0144fae5bda9e8521437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbPrefab: {fileID: 8143042635513170550, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+  minAmountToDrop: 5
+  maxAmountToDrop: 10
 --- !u!1 &1279687673
 GameObject:
   m_ObjectHideFlags: 0
@@ -31862,7 +31878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.25
+      value: 29.11
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -37235,3 +37251,60 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0458a185c225d5641b32720c4b00bb1b, type: 3}
+--- !u!1001 &8143042635961908247
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_RootOrder
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170546, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143042635513170550, guid: e4e497297a491674489129d2d10f80a9, type: 3}
+      propertyPath: m_Name
+      value: orb_drop
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e4e497297a491674489129d2d10f80a9, type: 3}
