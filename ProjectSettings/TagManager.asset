@@ -16,7 +16,7 @@ TagManager:
   - PlayerBolt
   - Shield
   - Dead
-  - 
+  - Teleport
   - EnemyAttack
   - PlayerPresence
   - Enemy

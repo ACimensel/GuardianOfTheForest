@@ -139,6 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyTime: 2
   moveSpeed: 10
+  enteredTeleport: 0
 --- !u!50 &1332584631
 Rigidbody2D:
   serializedVersion: 4

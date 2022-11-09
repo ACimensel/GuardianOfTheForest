@@ -49,14 +49,12 @@ public class Guardian : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private int orbCount = 0;
 
-    [Header("Jumping Parameters")]
-    [Space]
+    [Header("Jumping Parameters")] [Space]
     [SerializeField] float jumpForce = 15f;
     [SerializeField] float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
-    [Header("Wall Jumping Parameters")]
-    [Space]
+    [Header("Wall Jumping Parameters")] [Space]
     [SerializeField] Transform frontCheck;
     [SerializeField] float wallSlidingSpeed = -0.3f;
     [SerializeField] float xWallForce;
@@ -66,7 +64,8 @@ public class Guardian : MonoBehaviour
     private bool wallSliding = false;
     private bool wallJumping;
 
-    // var myQueue = new Queue<GameObject>();
+    // Teleport skill
+    public Queue<GameObject> teleportQueue = new Queue<GameObject>();
     // myQueue.Enqueue(5);
     // V = myQueue.Dequeue();  // returns 100
 
@@ -242,10 +241,17 @@ public class Guardian : MonoBehaviour
 
         // Use teleport skill
         Vector2 player = this.gameObject.transform.position;
-        if (Input.GetButtonDown("Skill_Teleport"))
+        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2)
         {
-            Debug.Log("TELEPORT");
-            GameObject teleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.309f, 0f), Quaternion.identity);
+            GameObject newTeleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.24f, 0f), Quaternion.identity);
+            teleportQueue.Enqueue(newTeleport);
+
+            if(teleportQueue.Count == 2){
+                GameObject oldTeleport = teleportQueue.Peek();
+
+                oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, newTeleport.transform.position);
+                newTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, oldTeleport.transform.position);
+            }
         }
 
         // Ranged attack
@@ -260,6 +266,7 @@ public class Guardian : MonoBehaviour
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");
 
+            // TODO instantiate at the end of cast animation
             if (facingRight)
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
@@ -268,8 +275,6 @@ public class Guardian : MonoBehaviour
             else
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-                Vector3 scale = bolt.transform.localScale;
-                bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
                 bolt.SendMessage("SetVelocity", "left");
             }
 
@@ -368,7 +373,7 @@ public class Guardian : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
-        Debug.Log("Hit by layer: " + layerName);
+        // Debug.Log("Hit by layer: " + layerName);
 
         if (layerName == "EnemyAttack" && isDamageEnabled)
         {
@@ -473,6 +478,18 @@ public class Guardian : MonoBehaviour
 
         foreach (Collider2D c in GetComponents<Collider2D>())
             c.enabled = active;
+    }
+
+
+    public void DequeueTeleport()
+    {
+        if(teleportQueue.Count > 0){
+            GameObject oldTeleport = teleportQueue.Dequeue();
+            oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+
+            if(teleportQueue.Count == 1)
+                teleportQueue.Peek().GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+        }
     }
 
 
