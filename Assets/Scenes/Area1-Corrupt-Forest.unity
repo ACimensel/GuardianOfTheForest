@@ -1647,7 +1647,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -40566,21 +40566,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: TeleportSkill
       objectReference: {fileID: 0}
-    - target: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2939313765097063020, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2939313765097063020, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.819
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2939313765097063020, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.633
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 2939313765097063020, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
       propertyPath: m_LocalPosition.z
