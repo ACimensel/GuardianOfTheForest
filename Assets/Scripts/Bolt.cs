@@ -46,17 +46,14 @@ public class Bolt : MonoBehaviour
             enteredTeleport = true;
             Vector3 scale = transform.localScale;
 
-            if (GetComponent<Rigidbody2D>().velocity.x > 0f){
-                // FLIP LEFT
-                transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
-                GetComponent<Rigidbody2D>().velocity = new Vector2(-moveSpeed, 0f);
-            }
-            else{
-                // FLIP RIGHT
-                transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
-                GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, 0f);
-            }
+            // Change COLOR
+            Debug.Log(GetComponent<SpriteRenderer>().color);
+            GetComponent<SpriteRenderer>().color = new Color(0/255f, 247/255f, 189/255f);
+            Debug.Log(GetComponent<SpriteRenderer>().color);
+            transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
+            // MOVE TRANSFORM
 
+            GetComponent<Rigidbody2D>().velocity = (GetComponent<Rigidbody2D>().velocity.x > 0f) ? new Vector2(-moveSpeed, 0f) : new Vector2(moveSpeed, 0f);
         }
     }
 
