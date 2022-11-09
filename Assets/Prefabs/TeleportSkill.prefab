@@ -121,6 +121,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stayAliveTime: 10
+  warpSpound: {fileID: 8300000, guid: a5a3b75f4fe50444d8cda3bf4fc03003, type: 3}
+  growSound: {fileID: 8300000, guid: 71fd116fe05a8bf468fc205ee0330a1a, type: 3}
+  hasPair: 0
+  pairPos: {x: 0, y: 0, z: 0}
 --- !u!61 &279098775
 BoxCollider2D:
   m_ObjectHideFlags: 0

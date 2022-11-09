@@ -243,11 +243,15 @@ public class Guardian : MonoBehaviour
         Vector2 player = this.gameObject.transform.position;
         if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2)
         {
-            Debug.Log("TELEPORT");
-            GameObject teleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.409f, 0f), Quaternion.identity);
-            teleportQueue.Enqueue(teleport);
-            Debug.Log(teleportQueue.Count);
-            // Debug.Log(teleportQueue.Peek());
+            GameObject newTeleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.24f, 0f), Quaternion.identity);
+            teleportQueue.Enqueue(newTeleport);
+
+            if(teleportQueue.Count == 2){
+                GameObject oldTeleport = teleportQueue.Peek();
+
+                oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, newTeleport.transform.position);
+                newTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, oldTeleport.transform.position);
+            }
         }
 
         // Ranged attack
@@ -262,6 +266,7 @@ public class Guardian : MonoBehaviour
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");
 
+            // TODO instantiate at the end of cast animation
             if (facingRight)
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
@@ -478,8 +483,13 @@ public class Guardian : MonoBehaviour
 
     public void DequeueTeleport()
     {
-        if(teleportQueue.Count > 0)
-            teleportQueue.Dequeue();
+        if(teleportQueue.Count > 0){
+            GameObject oldTeleport = teleportQueue.Dequeue();
+            oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+
+            if(teleportQueue.Count == 1)
+                teleportQueue.Peek().GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+        }
     }
 
 
