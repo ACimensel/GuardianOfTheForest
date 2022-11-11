@@ -29,6 +29,7 @@ public class Guardian : MonoBehaviour
     public float attackRange = 0.5f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
+    public bool isMovementEnabled = true;
     public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
     private Renderer rend;
@@ -40,7 +41,6 @@ public class Guardian : MonoBehaviour
     private float dirX = 0f;
     private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
     private float attackStaggerTime = 0.5f;
-    private bool isMovementEnabled = true;
     private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
@@ -225,8 +225,6 @@ public class Guardian : MonoBehaviour
         BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
         bc2d.enabled = false;
         
-        //TODO can attack and use skills during slide, disable
-
         float runningTime = 0f;
         bool isNotTouchingAnything = true; // TODO extend slide if top collider touching ground (use circleoverlap?)
 
@@ -254,10 +252,10 @@ public class Guardian : MonoBehaviour
         animator.SetFloat("Speed", absX);
 
         // Slide
-        if (Input.GetButtonDown("Slide") && slideCoroutine == null)
+        if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled)
         {
             Debug.Log("SLIDE WEEE");
-            // TODO only if ground, and not dead, and probably every other state
+            // TODO implement cooldown
             if(dirX != 0f) 
                 slideCoroutine = StartCoroutine(SlideForXTime(dirX));
         }
@@ -277,7 +275,7 @@ public class Guardian : MonoBehaviour
 
         // Use teleport skill
         Vector2 player = this.gameObject.transform.position;
-        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2)
+        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2 && isMovementEnabled)
         {
             GameObject newTeleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.24f, 0f), Quaternion.identity);
             teleportQueue.Enqueue(newTeleport);
@@ -291,7 +289,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled)
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -320,7 +318,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding)
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && slideCoroutine == null)
         {
             DisableMovement(false);
 
