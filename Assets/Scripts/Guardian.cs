@@ -29,9 +29,8 @@ public class Guardian : MonoBehaviour
     public float attackRange = 0.5f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
-
-    [Header("Events")] [Space]
-    public UnityEvent OnLandEvent;
+    public bool isMovementEnabled = true;
+    public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
     private Renderer rend;
     private Color startColor;
@@ -42,12 +41,14 @@ public class Guardian : MonoBehaviour
     private float dirX = 0f;
     private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
     private float attackStaggerTime = 0.5f;
-    private bool isMovementEnabled = true;
     private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
     private Vector3 velocity = Vector3.zero;
     private int orbCount = 0;
+
+    [Header("Events")] [Space]
+    public UnityEvent OnLandEvent;
 
     [Header("Jumping Parameters")] [Space]
     [SerializeField] float jumpForce = 15f;
@@ -63,11 +64,14 @@ public class Guardian : MonoBehaviour
     private bool isTouchingFront = false;
     private bool wallSliding = false;
     private bool wallJumping;
-
-    // Teleport skill
-    public Queue<GameObject> teleportQueue = new Queue<GameObject>();
-    // myQueue.Enqueue(5);
-    // V = myQueue.Dequeue();  // returns 100
+    
+    [Header("Ground Sliding Parameters")] [Space]
+    [SerializeField] float slideSpeed = 30f;
+    [SerializeField] float slideDuration = 0.5f;
+    [SerializeField] float slideCooldown = 2f;
+    private Coroutine slideCoroutine = null;
+    private float coroutineInvervalTime = 0.1f;
+    private float slideCooldownCounter = 0f;
 
 
     public enum AttackStates
@@ -211,20 +215,49 @@ public class Guardian : MonoBehaviour
     }
 
 
+    IEnumerator SlideForXTime(float _dirX)
+    {
+        isMovementEnabled = false;
+        isDamageEnabled = false;
+        animator.SetBool("isSliding", true);
+        gameObject.layer = LayerMask.NameToLayer("Sliding");
+
+        BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
+        bc2d.enabled = false;
+        
+        float runningTime = 0f;
+        bool isNotTouchingAnything = true; // TODO extend slide if top collider touching ground (use circleoverlap?)
+
+        while(runningTime < slideDuration && isNotTouchingAnything){
+            if(!isGrounded) break;
+
+            rb.velocity = (_dirX > 0f) ? new Vector2(slideSpeed, rb.velocity.y) : new Vector2(-slideSpeed, rb.velocity.y);
+
+            yield return new WaitForSeconds(coroutineInvervalTime);
+            runningTime += coroutineInvervalTime;
+        }
+
+        bc2d.enabled = true;
+        isMovementEnabled = true;
+        isDamageEnabled = true;
+        animator.SetBool("isSliding", false);
+        gameObject.layer = LayerMask.NameToLayer("Player");
+
+        slideCoroutine = null;
+    }
+
     void SetAnimationState()
     {
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
         // Slide
-        if (Input.GetButton("Slide"))
+        if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled)
         {
-            animator.SetBool("isSliding", true);
             Debug.Log("SLIDE WEEE");
-        }
-        else
-        {
-            animator.SetBool("isSliding", false);
+            // TODO implement cooldown
+            if(dirX != 0f) 
+                slideCoroutine = StartCoroutine(SlideForXTime(dirX));
         }
 
         // Transition from jumping to falling animation
@@ -242,7 +275,7 @@ public class Guardian : MonoBehaviour
 
         // Use teleport skill
         Vector2 player = this.gameObject.transform.position;
-        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2)
+        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2 && isMovementEnabled)
         {
             GameObject newTeleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.24f, 0f), Quaternion.identity);
             teleportQueue.Enqueue(newTeleport);
@@ -256,7 +289,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled)
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -285,7 +318,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding)
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -374,7 +407,7 @@ public class Guardian : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
-        // Debug.Log("Hit by layer: " + layerName);
+        Debug.Log("Hit by layer: " + layerName);
 
         if (layerName == "EnemyAttack" && isDamageEnabled)
         {

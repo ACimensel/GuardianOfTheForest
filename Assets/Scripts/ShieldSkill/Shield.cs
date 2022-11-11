@@ -111,7 +111,7 @@ public class Shield : MonoBehaviour
 
     void ManageShield()
     {
-        if (Input.GetButtonDown("Skill_Shield") && !isCoolingDown)
+        if (Input.GetButtonDown("Skill_Shield") && !isCoolingDown && guardian.isMovementEnabled)
         {
             shield.SetActive(true);
             isShieldActive = true;
