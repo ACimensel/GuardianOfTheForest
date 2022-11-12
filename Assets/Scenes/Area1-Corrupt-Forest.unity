@@ -19639,7 +19639,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 19
-      m_TileSpriteIndex: 21
+      m_TileSpriteIndex: 24
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -25579,7 +25579,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 10
-      m_TileSpriteIndex: 12
+      m_TileSpriteIndex: 21
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -25609,7 +25609,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 7
-      m_TileSpriteIndex: 10
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -26109,7 +26109,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 12
-      m_TileSpriteIndex: 8
+      m_TileSpriteIndex: 10
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -26119,7 +26119,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 5
-      m_TileSpriteIndex: 7
+      m_TileSpriteIndex: 8
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -26129,7 +26129,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 0
-      m_TileSpriteIndex: 0
+      m_TileSpriteIndex: 7
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -30578,8 +30578,8 @@ Tilemap:
   - m_RefCount: 0
     m_Data: {fileID: 0}
   m_TileSpriteArray:
-  - m_RefCount: 1
-    m_Data: {fileID: 1502900269, guid: cc81c75155498d747943462e250194ad, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 31
     m_Data: {fileID: 336669907, guid: b174069681e9c7e4c830c42c5f945e10, type: 3}
   - m_RefCount: 12
@@ -30593,17 +30593,17 @@ Tilemap:
   - m_RefCount: 47
     m_Data: {fileID: 1037354623, guid: 34fd31fd97d9d2943aa21ce56b1ec2a1, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 975863289, guid: cc81c75155498d747943462e250194ad, type: 3}
+    m_Data: {fileID: 1502900269, guid: cc81c75155498d747943462e250194ad, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 1890052686, guid: cc81c75155498d747943462e250194ad, type: 3}
+    m_Data: {fileID: 975863289, guid: cc81c75155498d747943462e250194ad, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: 183173502, guid: 17afed66130040f4fac8adb7c6579245, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 101755242, guid: 17afed66130040f4fac8adb7c6579245, type: 3}
+    m_Data: {fileID: 1890052686, guid: cc81c75155498d747943462e250194ad, type: 3}
   - m_RefCount: 9
     m_Data: {fileID: -1570385221, guid: 34fd31fd97d9d2943aa21ce56b1ec2a1, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 735219588, guid: 17afed66130040f4fac8adb7c6579245, type: 3}
+    m_Data: {fileID: 101755242, guid: 17afed66130040f4fac8adb7c6579245, type: 3}
   - m_RefCount: 42
     m_Data: {fileID: 1265222496, guid: 34fd31fd97d9d2943aa21ce56b1ec2a1, type: 3}
   - m_RefCount: 6
@@ -30621,13 +30621,13 @@ Tilemap:
   - m_RefCount: 6
     m_Data: {fileID: 1463621347, guid: 44a36ddfffc518c4ea05bcb02d3e9a8a, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 1754743005, guid: 121c2b4799fb4d24ea718023040abc0d, type: 3}
+    m_Data: {fileID: 735219588, guid: 17afed66130040f4fac8adb7c6579245, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: 1333304407, guid: 44a36ddfffc518c4ea05bcb02d3e9a8a, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -1159845810, guid: cc81c75155498d747943462e250194ad, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 1754743005, guid: 121c2b4799fb4d24ea718023040abc0d, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 2868
     m_Data:
@@ -35637,7 +35637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -35684,6 +35684,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6152777332188520560}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: maxHealth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: slideTime
       value: 0.2
       objectReference: {fileID: 0}
@@ -35707,6 +35711,14 @@ PrefabInstance:
       propertyPath: slideDuration
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: tilesToTurnOn
+      value: 
+      objectReference: {fileID: 155164157}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: tilesToTurnOff
+      value: 
+      objectReference: {fileID: 155164157}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: lastRespawnLocation
       value: 
@@ -35843,7 +35855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1496666046
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -38412,10 +38424,10 @@ GameObject:
   - component: {fileID: 2112595870}
   - component: {fileID: 2112595869}
   - component: {fileID: 2112595871}
+  - component: {fileID: 2112595876}
   - component: {fileID: 2112595873}
   - component: {fileID: 2112595872}
   - component: {fileID: 2112595875}
-  - component: {fileID: 2112595876}
   m_Layer: 13
   m_Name: A1Boss
   m_TagString: Untagged
@@ -38599,6 +38611,7 @@ MonoBehaviour:
   patrolSpeed: 1
   facingRight: 0
   projectilePrefab: {fileID: 3435358240103886122, guid: eef3754063a7a0e46b46ac0011b0e6aa, type: 3}
+  essence: {fileID: 1496666045}
   startPjCooldown: 0.8
   invulnerabilityTime: 1
   flashTime: 0.8

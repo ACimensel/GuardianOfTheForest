@@ -9,6 +9,7 @@ public class Guardian : MonoBehaviour
     [SerializeField] GameObject boltPrefab;
     [SerializeField] GameObject teleportPrefab;
     [SerializeField] GameObject lastRespawnLocation;
+    [SerializeField] GameObject tilesToTurnOff;
     [SerializeField] AudioClip[] meleeSounds;
     [SerializeField] Transform groundCheck; // A position marking where to check if the player is grounded.
     [SerializeField] LayerMask whatIsGround; // A mask determining what is ground to the character
@@ -489,6 +490,8 @@ public class Guardian : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth);
         gameManager.Revive();
+
+        tilesToTurnOff.SetActive(false);
     }
 
 
