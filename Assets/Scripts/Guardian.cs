@@ -75,10 +75,10 @@ public class Guardian : MonoBehaviour
     [Space]
     [SerializeField] float slideSpeed = 30f;
     [SerializeField] float slideDuration = 0.5f;
-    [SerializeField] float slideCooldown = 2f;
+    [SerializeField] public float slideCooldown = 2f;
     private Coroutine slideCoroutine = null;
     private float coroutineInvervalTime = 0.1f;
-    private float slideCooldownCounter = 0f;
+    public float slideCooldownCounter = 0f;
 
 
     public enum AttackStates
@@ -249,7 +249,6 @@ public class Guardian : MonoBehaviour
         isDamageEnabled = true;
         animator.SetBool("isSliding", false);
         gameObject.layer = LayerMask.NameToLayer("Player");
-
         slideCoroutine = null;
     }
 
@@ -261,11 +260,14 @@ public class Guardian : MonoBehaviour
 
         // Slide
         if (slideCooldownCounter > 0f)
+        {
             slideCooldownCounter -= Time.deltaTime;
+        }
 
         Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
         if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled && slideCooldownCounter <= 0f)
         {
+
             if (dirX != 0f)
             {
                 slideCoroutine = StartCoroutine(SlideForXTime(dirX));
@@ -545,8 +547,8 @@ public class Guardian : MonoBehaviour
 
             if (teleportQueue.Count == 1)
                 teleportQueue.Peek().GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
-                isTeleportEnabled = false;
-                StartCoroutine("TeleportCooldown");
+            isTeleportEnabled = false;
+            StartCoroutine("TeleportCooldown");
         }
     }
 
