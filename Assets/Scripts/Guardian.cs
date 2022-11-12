@@ -20,6 +20,7 @@ public class Guardian : MonoBehaviour
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
     [SerializeField] public float rangedCooldownTime = 3f;
+    [SerializeField] public float teleportCooldownTime = 5f;
     [SerializeField] int currentHealth = 4;
     [SerializeField] int maxHealth = 4;
     [SerializeField] int meleeDamage = 10;
@@ -30,6 +31,7 @@ public class Guardian : MonoBehaviour
     public float attackRange = 0.5f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
+    public bool isTeleportEnabled = true;
     public bool isMovementEnabled = true;
     public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
@@ -48,15 +50,18 @@ public class Guardian : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     private int orbCount = 0;
 
-    [Header("Events")] [Space]
+    [Header("Events")]
+    [Space]
     public UnityEvent OnLandEvent;
 
-    [Header("Jumping Parameters")] [Space]
+    [Header("Jumping Parameters")]
+    [Space]
     [SerializeField] float jumpForce = 15f;
     [SerializeField] float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
-    [Header("Wall Jumping Parameters")] [Space]
+    [Header("Wall Jumping Parameters")]
+    [Space]
     [SerializeField] Transform frontCheck;
     [SerializeField] float wallSlidingSpeed = -0.3f;
     [SerializeField] float xWallForce;
@@ -65,8 +70,9 @@ public class Guardian : MonoBehaviour
     private bool isTouchingFront = false;
     private bool wallSliding = false;
     private bool wallJumping;
-    
-    [Header("Ground Sliding Parameters")] [Space]
+
+    [Header("Ground Sliding Parameters")]
+    [Space]
     [SerializeField] float slideSpeed = 30f;
     [SerializeField] float slideDuration = 0.5f;
     [SerializeField] float slideCooldown = 2f;
@@ -95,7 +101,7 @@ public class Guardian : MonoBehaviour
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
-        
+
         orbCountText.text = orbCount.ToString();
     }
 
@@ -224,12 +230,13 @@ public class Guardian : MonoBehaviour
 
         BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
         bc2d.enabled = false;
-        
+
         float runningTime = 0f;
         bool isNotTouchingAnything = true; // TODO extend slide if top collider touching ground (use circleoverlap?)
 
-        while(runningTime < slideDuration && isNotTouchingAnything){
-            if(!isGrounded) break;
+        while (runningTime < slideDuration && isNotTouchingAnything)
+        {
+            if (!isGrounded) break;
 
             rb.velocity = (_dirX > 0f) ? new Vector2(slideSpeed, rb.velocity.y) : new Vector2(-slideSpeed, rb.velocity.y);
 
@@ -251,15 +258,16 @@ public class Guardian : MonoBehaviour
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
-        
+
         // Slide
-        if (slideCooldownCounter > 0f) 
+        if (slideCooldownCounter > 0f)
             slideCooldownCounter -= Time.deltaTime;
-        
+
         Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
         if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled && slideCooldownCounter <= 0f)
         {
-            if(dirX != 0f){
+            if (dirX != 0f)
+            {
                 slideCoroutine = StartCoroutine(SlideForXTime(dirX));
                 slideCooldownCounter = slideCooldown;
                 Debug.Log("RESETING:");
@@ -282,12 +290,13 @@ public class Guardian : MonoBehaviour
 
         // Use teleport skill
         Vector2 player = this.gameObject.transform.position;
-        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2 && isMovementEnabled)
+        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2 && isMovementEnabled && isTeleportEnabled)
         {
             GameObject newTeleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.24f, 0f), Quaternion.identity);
             teleportQueue.Enqueue(newTeleport);
 
-            if(teleportQueue.Count == 2){
+            if (teleportQueue.Count == 2)
+            {
                 GameObject oldTeleport = teleportQueue.Peek();
 
                 oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, newTeleport.transform.position);
@@ -365,7 +374,8 @@ public class Guardian : MonoBehaviour
                 {
                     enemy.GetComponent<Crow>().TakeDamage(meleeDamage);
                 }
-                else if (enemy.GetComponent<A1Boss>() != null) {
+                else if (enemy.GetComponent<A1Boss>() != null)
+                {
                     enemy.GetComponent<A1Boss>().TakeDamage(meleeDamage);
                 }
 
@@ -451,10 +461,12 @@ public class Guardian : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D col){
+    void OnCollisionEnter2D(Collision2D col)
+    {
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
 
-        if (layerName == "Orb"){
+        if (layerName == "Orb")
+        {
             orbCount += 5;
             orbCountText.text = orbCount.ToString();
         }
@@ -526,12 +538,15 @@ public class Guardian : MonoBehaviour
 
     public void DequeueTeleport()
     {
-        if(teleportQueue.Count > 0){
+        if (teleportQueue.Count > 0)
+        {
             GameObject oldTeleport = teleportQueue.Dequeue();
             oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
 
-            if(teleportQueue.Count == 1)
+            if (teleportQueue.Count == 1)
                 teleportQueue.Peek().GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+                isTeleportEnabled = false;
+                StartCoroutine("TeleportCooldown");
         }
     }
 
@@ -603,5 +618,11 @@ public class Guardian : MonoBehaviour
     {
         yield return new WaitForSeconds(rangedCooldownTime);
         isRangedEnabled = true;
+    }
+
+    IEnumerator TeleportCooldown()
+    {
+        yield return new WaitForSeconds(teleportCooldownTime);
+        isTeleportEnabled = true;
     }
 }
