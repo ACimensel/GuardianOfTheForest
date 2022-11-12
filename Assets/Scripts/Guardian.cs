@@ -112,7 +112,6 @@ public class Guardian : MonoBehaviour
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
             {
-                Debug.Log("JUMP");
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -164,7 +163,7 @@ public class Guardian : MonoBehaviour
         // play right animation if guardian wall sliding
         isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
         // if (isTouchingFront && !isGrounded && dirX != 0f)
-        if (isTouchingFront && !isGrounded)
+        if (isTouchingFront && !isGrounded && !animator.GetBool("isJumping"))
         {
             wallSliding = true;
             animator.SetBool("isWallSliding", true);
@@ -251,13 +250,20 @@ public class Guardian : MonoBehaviour
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
+        
         // Slide
-        if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled)
+        if (slideCooldownCounter > 0f) 
+            slideCooldownCounter -= Time.deltaTime;
+        
+        Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
+        if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled && slideCooldownCounter <= 0f)
         {
-            Debug.Log("SLIDE WEEE");
-            // TODO implement cooldown
-            if(dirX != 0f) 
+            if(dirX != 0f){
                 slideCoroutine = StartCoroutine(SlideForXTime(dirX));
+                slideCooldownCounter = slideCooldown;
+                Debug.Log("RESETING:");
+                Debug.Log("RESET: " + slideCooldownCounter);
+            }
         }
 
         // Transition from jumping to falling animation
