@@ -169,8 +169,8 @@ public class Guardian : MonoBehaviour
 
         // play right animation if guardian wall sliding
         isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
-        // if (isTouchingFront && !isGrounded && dirX != 0f)
-        if (isTouchingFront && !isGrounded && !animator.GetBool("isJumping"))
+        if (isTouchingFront && !isGrounded && dirX != 0f && !animator.GetBool("isJumping"))
+        // if (isTouchingFront && !isGrounded && !animator.GetBool("isJumping"))
         {
             wallSliding = true;
             animator.SetBool("isWallSliding", true);
