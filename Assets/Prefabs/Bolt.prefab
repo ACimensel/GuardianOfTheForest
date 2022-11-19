@@ -139,6 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destroyTime: 2
   moveSpeed: 10
+  enteredTeleport: 0
 --- !u!50 &1332584631
 Rigidbody2D:
   serializedVersion: 4
@@ -172,7 +173,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3367f712723567f4abfc911be5b2b375, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.509
   m_Pitch: 3
   Loop: 0
   Mute: 0

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class Guardian : MonoBehaviour
 {
     [SerializeField] GameObject boltPrefab;
     [SerializeField] GameObject teleportPrefab;
     [SerializeField] GameObject lastRespawnLocation;
+    [SerializeField] GameObject tilesToTurnOff;
     [SerializeField] AudioClip[] meleeSounds;
     [SerializeField] Transform groundCheck; // A position marking where to check if the player is grounded.
     [SerializeField] LayerMask whatIsGround; // A mask determining what is ground to the character
@@ -18,19 +20,20 @@ public class Guardian : MonoBehaviour
     [SerializeField] float hitStaggerTime = 0.2f;
     [SerializeField] float invulnerabilityTime = 3f;
     [SerializeField] public float rangedCooldownTime = 3f;
+    [SerializeField] public float teleportCooldownTime = 5f;
     [SerializeField] int currentHealth = 4;
     [SerializeField] int maxHealth = 4;
     [SerializeField] int meleeDamage = 10;
 
+    public TextMeshProUGUI orbCountText;
     public HealthBar healthBar;
     public Transform attackPoint;
     public float attackRange = 0.5f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
-
-    [Header("Events")]
-    [Space]
-    public UnityEvent OnLandEvent;
+    public bool isTeleportEnabled = true;
+    public bool isMovementEnabled = true;
+    public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
     private Renderer rend;
     private Color startColor;
@@ -41,11 +44,15 @@ public class Guardian : MonoBehaviour
     private float dirX = 0f;
     private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
     private float attackStaggerTime = 0.5f;
-    private bool isMovementEnabled = true;
     private bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
     private Vector3 velocity = Vector3.zero;
+    private int orbCount = 0;
+
+    [Header("Events")]
+    [Space]
+    public UnityEvent OnLandEvent;
 
     [Header("Jumping Parameters")]
     [Space]
@@ -64,9 +71,14 @@ public class Guardian : MonoBehaviour
     private bool wallSliding = false;
     private bool wallJumping;
 
-    // var myQueue = new Queue<GameObject>();
-    // myQueue.Enqueue(5);
-    // V = myQueue.Dequeue();  // returns 100
+    [Header("Ground Sliding Parameters")]
+    [Space]
+    [SerializeField] float slideSpeed = 30f;
+    [SerializeField] float slideDuration = 0.5f;
+    [SerializeField] public float slideCooldown = 2f;
+    private Coroutine slideCoroutine = null;
+    private float coroutineInvervalTime = 0.1f;
+    public float slideCooldownCounter = 0f;
 
 
     public enum AttackStates
@@ -89,6 +101,8 @@ public class Guardian : MonoBehaviour
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
+
+        orbCountText.text = orbCount.ToString();
     }
 
 
@@ -105,7 +119,6 @@ public class Guardian : MonoBehaviour
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
             {
-                Debug.Log("JUMP");
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -154,9 +167,10 @@ public class Guardian : MonoBehaviour
             }
         }
 
-        // Is guardian wall sliding? play right animation
+        // play right animation if guardian wall sliding
         isTouchingFront = Physics2D.OverlapCircle(frontCheck.position, checkRadius, whatIsGround);
-        if (isTouchingFront && !isGrounded)
+        if (isTouchingFront && !isGrounded && dirX != 0f && !animator.GetBool("isJumping"))
+        // if (isTouchingFront && !isGrounded && !animator.GetBool("isJumping"))
         {
             wallSliding = true;
             animator.SetBool("isWallSliding", true);
@@ -207,20 +221,60 @@ public class Guardian : MonoBehaviour
     }
 
 
+    IEnumerator SlideForXTime(float _dirX)
+    {
+        isMovementEnabled = false;
+        isDamageEnabled = false;
+        animator.SetBool("isSliding", true);
+        gameObject.layer = LayerMask.NameToLayer("Sliding");
+
+        BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
+        bc2d.enabled = false;
+
+        float runningTime = 0f;
+        bool isNotTouchingAnything = true; // TODO extend slide if top collider touching ground (use circleoverlap?)
+
+        while (runningTime < slideDuration && isNotTouchingAnything)
+        {
+            if (!isGrounded) break;
+
+            rb.velocity = (_dirX > 0f) ? new Vector2(slideSpeed, rb.velocity.y) : new Vector2(-slideSpeed, rb.velocity.y);
+
+            yield return new WaitForSeconds(coroutineInvervalTime);
+            runningTime += coroutineInvervalTime;
+        }
+
+        bc2d.enabled = true;
+        isMovementEnabled = true;
+        isDamageEnabled = true;
+        animator.SetBool("isSliding", false);
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        slideCoroutine = null;
+    }
+
     void SetAnimationState()
     {
         float absX = Mathf.Abs(dirX);
         animator.SetFloat("Speed", absX);
 
+
         // Slide
-        if (Input.GetButton("Slide"))
+        if (slideCooldownCounter > 0f)
         {
-            animator.SetBool("isSliding", true);
-            Debug.Log("SLIDE WEEE");
+            slideCooldownCounter -= Time.deltaTime;
         }
-        else
+
+        Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
+        if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled && slideCooldownCounter <= 0f)
         {
-            animator.SetBool("isSliding", false);
+
+            if (dirX != 0f)
+            {
+                slideCoroutine = StartCoroutine(SlideForXTime(dirX));
+                slideCooldownCounter = slideCooldown;
+                Debug.Log("RESETING:");
+                Debug.Log("RESET: " + slideCooldownCounter);
+            }
         }
 
         // Transition from jumping to falling animation
@@ -238,14 +292,22 @@ public class Guardian : MonoBehaviour
 
         // Use teleport skill
         Vector2 player = this.gameObject.transform.position;
-        if (Input.GetButtonDown("Skill_Teleport"))
+        if (Input.GetButtonDown("Skill_Teleport") && isGrounded && teleportQueue.Count < 2 && isMovementEnabled && isTeleportEnabled)
         {
-            Debug.Log("TELEPORT");
-            GameObject teleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.309f, 0f), Quaternion.identity);
+            GameObject newTeleport = Instantiate(teleportPrefab, new Vector3(player.x, player.y - 0.24f, 0f), Quaternion.identity);
+            teleportQueue.Enqueue(newTeleport);
+
+            if (teleportQueue.Count == 2)
+            {
+                GameObject oldTeleport = teleportQueue.Peek();
+
+                oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, newTeleport.transform.position);
+                newTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(true, oldTeleport.transform.position);
+            }
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled)
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -256,6 +318,7 @@ public class Guardian : MonoBehaviour
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");
 
+            // TODO instantiate at the end of cast animation
             if (facingRight)
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
@@ -264,8 +327,6 @@ public class Guardian : MonoBehaviour
             else
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-                Vector3 scale = bolt.transform.localScale;
-                bolt.transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
                 bolt.SendMessage("SetVelocity", "left");
             }
 
@@ -275,7 +336,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding)
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -402,6 +463,17 @@ public class Guardian : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        string layerName = LayerMask.LayerToName(col.gameObject.layer);
+
+        if (layerName == "Orb")
+        {
+            orbCount += 5;
+            orbCountText.text = orbCount.ToString();
+        }
+
+    }
 
     void Die()
     {
@@ -432,6 +504,8 @@ public class Guardian : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth);
         gameManager.Revive();
+
+        tilesToTurnOff.SetActive(false);
     }
 
 
@@ -461,6 +535,21 @@ public class Guardian : MonoBehaviour
 
         foreach (Collider2D c in GetComponents<Collider2D>())
             c.enabled = active;
+    }
+
+
+    public void DequeueTeleport()
+    {
+        if (teleportQueue.Count > 0)
+        {
+            GameObject oldTeleport = teleportQueue.Dequeue();
+            oldTeleport.GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+
+            if (teleportQueue.Count == 1)
+                teleportQueue.Peek().GetComponent<TeleportSkill>().UpdateTeleportPair(false, Vector3.zero);
+            isTeleportEnabled = false;
+            StartCoroutine("TeleportCooldown");
+        }
     }
 
 
@@ -531,5 +620,11 @@ public class Guardian : MonoBehaviour
     {
         yield return new WaitForSeconds(rangedCooldownTime);
         isRangedEnabled = true;
+    }
+
+    IEnumerator TeleportCooldown()
+    {
+        yield return new WaitForSeconds(teleportCooldownTime);
+        isTeleportEnabled = true;
     }
 }

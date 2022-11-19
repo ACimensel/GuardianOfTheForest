@@ -11,6 +11,10 @@ public class A1Boss : MonoBehaviour
     public bool facingRight;
     private SpriteRenderer spriteRenderer;
     [SerializeField] GameObject projectilePrefab;
+<<<<<<< HEAD
+=======
+    [SerializeField] GameObject essence;
+>>>>>>> main
 
 
     [SerializeField] float startPjCooldown;
@@ -144,6 +148,10 @@ public class A1Boss : MonoBehaviour
                 StartCoroutine("DestroyAfterTime");
                 gameObject.layer = LayerMask.NameToLayer("Dead");
                 rb.velocity = new Vector2(0f, 0f);
+<<<<<<< HEAD
+=======
+                essence.SetActive(true);
+>>>>>>> main
             }
         }
     }
