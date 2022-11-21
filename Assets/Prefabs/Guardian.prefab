@@ -407,6 +407,7 @@ MonoBehaviour:
   boltPrefab: {fileID: 4106640351002158497, guid: 7eda9a1f46e7e0546947f3d628f9bc52, type: 3}
   teleportPrefab: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
   lastRespawnLocation: {fileID: 0}
+  tilesToTurnOff: {fileID: 0}
   meleeSounds:
   - {fileID: 8300000, guid: cef111c52e06d0f4091fc408c6e40b3a, type: 3}
   - {fileID: 8300000, guid: 35b5a18e24d7a9243a51c9c3ab4413d2, type: 3}
@@ -425,6 +426,7 @@ MonoBehaviour:
   hitStaggerTime: 0.2
   invulnerabilityTime: 1
   rangedCooldownTime: 3
+  teleportCooldownTime: 5
   currentHealth: 10
   maxHealth: 10
   meleeDamage: 10
@@ -434,6 +436,8 @@ MonoBehaviour:
   attackRange: 0.9
   isDamageEnabled: 1
   isRangedEnabled: 1
+  isTeleportEnabled: 1
+  isMovementEnabled: 1
   OnLandEvent:
     m_PersistentCalls:
       m_Calls:
@@ -453,9 +457,13 @@ MonoBehaviour:
   coyoteTime: 0.2
   frontCheck: {fileID: 816064583}
   wallSlidingSpeed: -0.3
-  xWallForce: 450
-  yWallForce: 450
+  xWallForce: 300
+  yWallForce: 800
   delayMove: 0.2
+  slideSpeed: 30
+  slideDuration: 0.2
+  slideCooldown: 2
+  slideCooldownCounter: 0
 --- !u!50 &278275423706400928
 Rigidbody2D:
   serializedVersion: 4
