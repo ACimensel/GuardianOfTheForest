@@ -5,9 +5,9 @@ using UnityEngine;
 public class PersistantData : MonoBehaviour
 {
     public static PersistantData PD;
-     
-    public GameObject soundManager;
-    public int score = 0;
+
+    public bool area1BossKilled = true;     
+    public bool area2BossKilled = true;     
      
     void Awake()
         {
