@@ -47,7 +47,6 @@ public class Guardian : MonoBehaviour
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
     private Vector3 velocity = Vector3.zero;
-    private int orbCount = 0;
 
     [Header("Events")]
     [Space]
@@ -101,7 +100,7 @@ public class Guardian : MonoBehaviour
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
 
-        orbCountText.text = orbCount.ToString();
+        orbCountText.text = PD.orbCount.ToString();
         healthBar.InitializeHealthBar(PD.guardianMaxHealth, PD.guardianCurrentHealth);
     }
 
@@ -469,8 +468,8 @@ public class Guardian : MonoBehaviour
 
         if (layerName == "Orb")
         {
-            orbCount += 5;
-            orbCountText.text = orbCount.ToString();
+            PD.orbCount += 5;
+            orbCountText.text = PD.orbCount.ToString();
         }
 
     }
