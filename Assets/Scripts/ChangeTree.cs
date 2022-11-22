@@ -10,7 +10,6 @@ public class ChangeTree : MonoBehaviour
     private PersistantData PD;
 
     private void Awake() {
-        
         PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
     }
 

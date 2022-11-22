@@ -6,6 +6,11 @@ public class PersistantData : MonoBehaviour
 {
     public static PersistantData PD;
 
+    // Guardian Data
+    public int guardianMaxHealth = 10;
+    public int guardianCurrentHealth = 10;
+
+    // Boss Data
     public bool area1BossKilled = true;     
     public bool area2BossKilled = true;     
      

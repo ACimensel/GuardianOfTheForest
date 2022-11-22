@@ -21,8 +21,6 @@ public class Guardian : MonoBehaviour
     [SerializeField] float invulnerabilityTime = 3f;
     [SerializeField] public float rangedCooldownTime = 3f;
     [SerializeField] public float teleportCooldownTime = 5f;
-    [SerializeField] int currentHealth = 4;
-    [SerializeField] int maxHealth = 4;
     [SerializeField] int meleeDamage = 10;
 
     public TextMeshProUGUI orbCountText;
@@ -35,6 +33,7 @@ public class Guardian : MonoBehaviour
     public bool isMovementEnabled = true;
     public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
+    private PersistantData PD;
     private Renderer rend;
     private Color startColor;
     private Rigidbody2D rb;
@@ -90,9 +89,9 @@ public class Guardian : MonoBehaviour
         RANGED,
     }
 
-
     void Awake()
     {
+        PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
         rb = GetComponent<Rigidbody2D>();
@@ -103,6 +102,7 @@ public class Guardian : MonoBehaviour
             OnLandEvent = new UnityEvent();
 
         orbCountText.text = orbCount.ToString();
+        healthBar.InitializeHealthBar(PD.guardianMaxHealth, PD.guardianCurrentHealth);
     }
 
 
@@ -434,11 +434,11 @@ public class Guardian : MonoBehaviour
             DisableMovement();
 
             Debug.Log("DAMAGED");
-            currentHealth--;
-            healthBar.SetHealth(currentHealth);
+            PD.guardianCurrentHealth--;
+            healthBar.SetHealth(PD.guardianCurrentHealth);
 
 
-            if (currentHealth > 0)
+            if (PD.guardianCurrentHealth > 0)
             {
                 if (col.gameObject.transform.position.x < this.gameObject.transform.position.x)
                     rb.AddForce(new Vector2(300f, 100f));
@@ -484,8 +484,8 @@ public class Guardian : MonoBehaviour
         SetAllCollidersAndRbStatus(false);
         animator.SetBool("isDead", true);
 
-        currentHealth = 0;
-        healthBar.SetHealth(currentHealth);
+        PD.guardianCurrentHealth = 0;
+        healthBar.SetHealth(PD.guardianCurrentHealth);
         gameManager.GameOver();
     }
 
@@ -501,8 +501,8 @@ public class Guardian : MonoBehaviour
         EnableMovement();
         SetAllCollidersAndRbStatus(true);
 
-        currentHealth = maxHealth;
-        healthBar.SetHealth(currentHealth);
+        PD.guardianCurrentHealth = PD.guardianMaxHealth;
+        healthBar.SetHealth(PD.guardianCurrentHealth);
         gameManager.Revive();
 
         tilesToTurnOff.SetActive(false);
