@@ -27,6 +27,7 @@ public class A1Boss : MonoBehaviour
     private bool isDamageEnabled;
     private Renderer rend;
     private Color startColor;
+    private PersistantData PD;
 
     bool detectedPlayer;
     bool isDead;
@@ -35,6 +36,7 @@ public class A1Boss : MonoBehaviour
 
     void Awake()
     {
+        PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         facingRight = false;
@@ -48,7 +50,8 @@ public class A1Boss : MonoBehaviour
 
     void Start()
     {
-
+        if(PD && PD.area1BossKilled == true)
+            Destroy(gameObject);
     }
 
     void FixedUpdate()
@@ -141,6 +144,7 @@ public class A1Boss : MonoBehaviour
             }
             else
             {
+                PD.area1BossKilled = true;
                 animator.SetBool("isDead", true);
                 StartCoroutine("DestroyAfterTime");
                 gameObject.layer = LayerMask.NameToLayer("Dead");
