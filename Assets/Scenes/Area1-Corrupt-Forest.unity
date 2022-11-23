@@ -42778,7 +42778,7 @@ MonoBehaviour:
   startPjCooldown: 0.8
   invulnerabilityTime: 1
   flashTime: 0.8
-  health: 1
+  health: 50
   isFlipped: 0
   player: {fileID: 1255839349}
 --- !u!1 &2132173902
