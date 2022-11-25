@@ -20,11 +20,61 @@ public class Deer : MonoBehaviour
     private bool isDamageEnabled = true;
     private float destroyTime = 4f;
 
+    public bool hitWall = false;
+    AnimatorClipInfo[] animCurrentClipInfo;
+    private string animationName;
+
+    Rigidbody2D rb;
+
+    public float attackRange = 2f;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
+        rb = animator.GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+        animationName = animCurrentClipInfo[0].clip.name;
+
+        Patrol();
+    }
+
+    void Patrol()
+    {
+        if (hitWall)
+        {
+            facingRight = !facingRight;
+            transform.Rotate(0f, 180f, 0f);
+            hitWall = false;
+        }
+
+        if (animationName != "deer_swipe")
+        {
+            if (facingRight)
+            {
+                rb.velocity = new Vector2(patrolSpeed, 0f);
+            }
+            else
+            {
+                rb.velocity = new Vector2(-patrolSpeed, 0f);
+            }
+        }
+        
+        // if (animationName == "deer_patrol" || animationName == "deer_walk")
+        // {
+        //     if (hitWall)
+        //     {
+        //         facingRight = !facingRight;
+        //         transform.Rotate(0f, 180f, 0f);
+        //         hitWall = false;
+        //     }
+        // }
+
     }
 
     public void LookAtPlayer()
@@ -76,35 +126,40 @@ public class Deer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-		if(LayerMask.LayerToName(col.gameObject.layer) == "PlayerBolt" && isDamageEnabled){   
-            TakeDamage(Bolt.boltDamage); 
+        if (LayerMask.LayerToName(col.gameObject.layer) == "PlayerBolt" && isDamageEnabled)
+        {
+            TakeDamage(Bolt.boltDamage);
         }
 
         if (LayerMask.LayerToName(col.gameObject.layer) == "Wall")
         {
-            transform.Rotate(0f, 180f, 0f);
-            facingRight = !facingRight;
+            hitWall = true;
         }
     }
 
 
-    public void TakeDamage(int damageTaken){
-        if(isDamageEnabled){
+    public void TakeDamage(int damageTaken)
+    {
+        if (isDamageEnabled)
+        {
             isDamageEnabled = false;
             health -= damageTaken;
 
-            if(health > 0){
-                StartCoroutine ("BecomeInvulnerable");
+            if (health > 0)
+            {
+                StartCoroutine("BecomeInvulnerable");
             }
-            else{
+            else
+            {
                 gameObject.layer = LayerMask.NameToLayer("Dead");
-                foreach (Transform child in transform){
+                foreach (Transform child in transform)
+                {
                     child.gameObject.layer = LayerMask.NameToLayer("Dead");
                 }
 
                 animator.SetBool("isDead", true);
                 StartCoroutine("DestroyAfterTime");
-                
+
                 GetComponent<DropOrbs>().Drop();
             }
         }

@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A1BossProjectile : MonoBehaviour
+public class A1BossCharge : MonoBehaviour
 {
     [SerializeField] float destroyTime = 5f;
-    [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float moveSpeed = 7f;
     private Transform player;
     private Vector2 target;
 

@@ -18,6 +18,17 @@ public class A1DetectPlayer : MonoBehaviour
         animator = a1boss.GetComponent<Animator>();
     }
 
+    void Update()
+    {
+        if (this.GetComponent<A1Boss>().animationName == "a1_dash")
+        {
+            BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
+            bc2d.enabled = false;
+
+            CircleCollider2D cc2d = GetComponent<CircleCollider2D>();
+            cc2d.enabled = false;
+        }
+    }
 
 
     void OnTriggerEnter2D(Collider2D col)
