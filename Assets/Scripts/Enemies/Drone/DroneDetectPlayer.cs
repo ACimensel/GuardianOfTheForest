@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A1DetectPlayer : MonoBehaviour
+public class DroneDetectPlayer : MonoBehaviour
 {
 
     private Animator animator;
-    public A1Boss a1boss;
+    public Drone drone;
 
     void Start()
     {
@@ -15,20 +15,9 @@ public class A1DetectPlayer : MonoBehaviour
 
     void Awake()
     {
-        animator = a1boss.GetComponent<Animator>();
+        animator = drone.GetComponent<Animator>();
     }
 
-    void Update()
-    {
-        if (a1boss.GetComponent<A1Boss>().animationName == "a1_dash")
-        {
-            BoxCollider2D bc2d = GetComponent<BoxCollider2D>();
-            bc2d.enabled = false;
-
-            CircleCollider2D cc2d = GetComponent<CircleCollider2D>();
-            cc2d.enabled = false;
-        }
-    }
 
 
     void OnTriggerEnter2D(Collider2D col)
