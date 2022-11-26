@@ -10,7 +10,7 @@ public class Drone : MonoBehaviour
     public float patrolSpeed = 50f;
     public bool isFlipped = false;
     public bool facingRight = false;
-    public Transform player;
+    private Transform player;
 
     private Renderer rend;
     private Animator animator;
@@ -32,6 +32,7 @@ public class Drone : MonoBehaviour
         rend = GetComponent<Renderer>();
         rb = animator.GetComponent<Rigidbody2D>();
         startColor = rend.material.color;
+        player = GameObject.Find("Guardian").GetComponent<Guardian>().GetComponent<Transform>();
     }
 
     void OnPathComplete(Path p)
