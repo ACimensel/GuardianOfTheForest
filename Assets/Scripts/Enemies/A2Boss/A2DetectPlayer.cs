@@ -21,10 +21,7 @@ public class A2DetectPlayer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        // if (LayerMask.LayerToName(col.gameObject.layer) == "Player" && isTreeIdle == false)
-        // {
-        //     animator.SetBool("detectedPlayer", true);
-        // }
+
     }
 
 

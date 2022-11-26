@@ -25,7 +25,6 @@ public class SummonDrones : StateMachineBehaviour
     {
         GameObject drone = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.2f, player.transform.position.y + 8f, 0f), Quaternion.identity);
         GameObject drone2 = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.4f, player.transform.position.y + 8f, 0f), Quaternion.identity);
-        GameObject drone3 = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.6f, player.transform.position.y + 8f, 0f), Quaternion.identity);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

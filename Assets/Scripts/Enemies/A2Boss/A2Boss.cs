@@ -67,7 +67,7 @@ public class A2Boss : MonoBehaviour
             animator.SetBool("detectedPlayer", true);
         }
 
-        if (animator.GetBool("detectedPlayer") && isIdle == false && Vector2.Distance(player.position, rb.position) < 5f && Vector2.Distance(player.position, rb.position) > attackRange)
+        if (animator.GetBool("detectedPlayer") && isIdle == false && Vector2.Distance(player.position, rb.position) < 4f && Vector2.Distance(player.position, rb.position) > attackRange)
         {
             float randomNumber = Random.Range(-10.0f, 10.0f);
             if (randomNumber < 0)
@@ -78,8 +78,6 @@ public class A2Boss : MonoBehaviour
             {
                 animator.SetTrigger("summonDronesAttack");
             }
-
-            // GameObject drone = Instantiate(dronePrefab, new Vector3(this.transform.position.x + 0.4f, this.transform.position.y + 5f, 0f), Quaternion.identity);            
         }
 
         if (animator.GetBool("detectedPlayer") && isIdle == false)
@@ -88,7 +86,6 @@ public class A2Boss : MonoBehaviour
             if (Vector2.Distance(player.position, rb.position) > attackRange)
             {
                 //rb.velocity = new Vector2(rb.velocity.x, 30f); // jump
-
 
                 Vector2 target = new Vector2(player.position.x, rb.position.y);
                 Vector2 newPos = Vector2.MoveTowards(rb.position, target, walkSpeed * Time.fixedDeltaTime);
@@ -154,11 +151,11 @@ public class A2Boss : MonoBehaviour
     IEnumerator BecomeInvulnerable()
     {
         animator.SetTrigger("isHurt");
-        //Coroutine flash = StartCoroutine("Flash");
+        Coroutine flash = StartCoroutine("Flash");
 
         yield return new WaitForSeconds(invulnerabilityTime);
 
-        //StopCoroutine(flash);
+        StopCoroutine(flash);
         startColor.a = 1f;
         rend.material.color = startColor;
         isDamageEnabled = true;
