@@ -419,7 +419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ef196ec7a5fb548b6b1ca29137cb6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dronePrefab: {fileID: 5086719763897164235, guid: 0944d467e57867c4d924cefc0f8ca62d, type: 3}
+  dronePrefab: {fileID: 7650740051241166438, guid: 38592ad5e5657e64cb6f8185b5efe351, type: 3}
 --- !u!1102 &1456589171589460290
 AnimatorState:
   serializedVersion: 6

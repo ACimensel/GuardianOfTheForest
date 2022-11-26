@@ -23,9 +23,9 @@ public class SummonDrones : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        GameObject drone = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.2f, player.transform.position.y + 9f, 0f), Quaternion.identity);
-        GameObject drone2 = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.4f, player.transform.position.y + 9f, 0f), Quaternion.identity);
-        GameObject drone3 = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.6f, player.transform.position.y + 9f, 0f), Quaternion.identity);
+        GameObject drone = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.2f, player.transform.position.y + 8f, 0f), Quaternion.identity);
+        GameObject drone2 = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.4f, player.transform.position.y + 8f, 0f), Quaternion.identity);
+        GameObject drone3 = Instantiate(dronePrefab, new Vector3(player.transform.position.x + 0.6f, player.transform.position.y + 8f, 0f), Quaternion.identity);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
