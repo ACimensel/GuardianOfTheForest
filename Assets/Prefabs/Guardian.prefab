@@ -427,8 +427,6 @@ MonoBehaviour:
   invulnerabilityTime: 1
   rangedCooldownTime: 3
   teleportCooldownTime: 5
-  currentHealth: 10
-  maxHealth: 10
   meleeDamage: 10
   orbCountText: {fileID: 0}
   healthBar: {fileID: 0}
@@ -453,7 +451,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  jumpForce: 15.5
+  jumpForce: 16
   coyoteTime: 0.2
   frontCheck: {fileID: 816064583}
   wallSlidingSpeed: -0.3
