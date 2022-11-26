@@ -32,6 +32,7 @@ public class Drone : MonoBehaviour
         rend = GetComponent<Renderer>();
         rb = animator.GetComponent<Rigidbody2D>();
         startColor = rend.material.color;
+        player = GameObject.Find("Guardian").GetComponent<Transform>();
     }
 
     void OnPathComplete(Path p)
