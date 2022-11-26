@@ -27,7 +27,7 @@ TagManager:
   - Ground
   - Orb
   - Sliding
-  - 
+  - Fire
   - 
   - 
   - 
@@ -44,6 +44,9 @@ TagManager:
     locked: 0
   - name: Traps
     uniqueID: 3720810423
+    locked: 0
+  - name: Ladder
+    uniqueID: 2878198949
     locked: 0
   - name: Default
     uniqueID: 0
