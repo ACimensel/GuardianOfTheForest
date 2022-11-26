@@ -15,14 +15,13 @@ public class A2DetectPlayer : MonoBehaviour
         animator = A2Boss.GetComponent<Animator>();
     }
 
-    void Update() {
+    void Update()
+    {
         isTreeIdle = A2Boss.GetComponent<A2Boss>().isIdle;
     }
 
     void OnTriggerEnter2D(Collider2D col)
-    {
-
-    }
+    { }
 
 
     void OnTriggerExit2D(Collider2D col)
@@ -33,6 +32,6 @@ public class A2DetectPlayer : MonoBehaviour
             A2Boss.GetComponent<A2Boss>().isIdle = true;
         }
     }
-    
+
 }
 

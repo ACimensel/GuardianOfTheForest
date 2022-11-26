@@ -10,7 +10,6 @@ public class A2Boss : MonoBehaviour
     [SerializeField] float flashTime = 0.8f;
     [SerializeField] GameObject dronePrefab;
 
-
     public int health = 60;
     public float walkSpeed = 5f;
     public bool isFlipped = false;
@@ -31,14 +30,15 @@ public class A2Boss : MonoBehaviour
 
     AnimatorClipInfo[] animCurrentClipInfo;
     private string animationName;
-
     Rigidbody2D rb;
 
     private float attackRange = 2f;
-
     public bool isIdle = true;
 
     Vector3 localScale;
+
+    public bool isInAir = false;
+
 
     void Awake()
     {

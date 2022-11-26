@@ -32,8 +32,6 @@ public class JumpUp : StateMachineBehaviour
         }
 
         a2boss.GetComponent<Rigidbody2D>().velocity = new Vector2(dist, 40f); // jump;
-
-        //rb.velocity = new Vector2(rb.velocity.x, 30f); // jump
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
