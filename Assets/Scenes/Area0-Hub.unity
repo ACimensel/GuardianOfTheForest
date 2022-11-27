@@ -330,6 +330,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6268704288491983320}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 260618568194716298}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: orbCountText
       value: 
       objectReference: {fileID: 260618567534077247}
