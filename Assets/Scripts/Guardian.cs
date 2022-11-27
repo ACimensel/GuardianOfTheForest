@@ -129,7 +129,7 @@ public class Guardian : MonoBehaviour
                 animator.speed = 1f;
                 gameObject.layer = LayerMask.NameToLayer("Climbing");
             }
-            else if(vertical == 0f)
+            else if(vertical == 0f && isClimbing)
                 animator.speed = 0f;
 
             if (isGrounded)
