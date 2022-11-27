@@ -43427,6 +43427,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: TeleSquare
       objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865773, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865773, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.40392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865773, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.92156863
+      objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865774, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_RootOrder
       value: 18
