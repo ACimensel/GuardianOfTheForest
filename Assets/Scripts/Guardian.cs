@@ -263,7 +263,7 @@ public class Guardian : MonoBehaviour
             slideCooldownCounter -= Time.deltaTime;
         }
 
-        Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
+        // Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
         if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled && slideCooldownCounter <= 0f)
         {
             if (dirX != 0f)
