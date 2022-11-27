@@ -78,6 +78,13 @@ public class Guardian : MonoBehaviour
     private float coroutineInvervalTime = 0.1f;
     public float slideCooldownCounter = 0f;
 
+    [Header("Ladder Climbing Parameters")]
+    [Space]
+    [SerializeField] private float speed = 8f;
+    private float vertical;
+    private bool isTouchingLadder = false;
+    private bool isClimbing = false;
+    private float gravScale;
 
     public enum AttackStates
     {
@@ -104,12 +111,26 @@ public class Guardian : MonoBehaviour
         healthBar.InitializeHealthBar(PD.guardianMaxHealth, PD.guardianCurrentHealth);
     }
 
+    private void Start() {
+        gravScale = rb.gravityScale;
+    }
 
     void Update()
     {
         if (isMovementEnabled)
         {
             dirX = Input.GetAxisRaw("Horizontal") * moveSpeed;
+            vertical = Input.GetAxisRaw("Climb");
+
+            if (isTouchingLadder && Mathf.Abs(vertical) > 0f)
+            {
+                isClimbing = true;
+                animator.SetBool("isClimbing", true);
+                animator.speed = 1f;
+                gameObject.layer = LayerMask.NameToLayer("Climbing");
+            }
+            else if(vertical == 0f)
+                animator.speed = 0f;
 
             if (isGrounded)
                 coyoteTimeCounter = coyoteTime;
@@ -137,6 +158,17 @@ public class Guardian : MonoBehaviour
 
     void FixedUpdate()
     {
+        
+        if (isClimbing)
+        {
+            rb.gravityScale = 0f;
+            rb.velocity = new Vector2(rb.velocity.x, vertical * speed);
+        }
+        else
+        {
+            rb.gravityScale = gravScale;
+        }
+
         if (isMovementEnabled)
         {
             // Move the character by finding the target velocity
@@ -304,7 +336,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && slideCoroutine == null)
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && !isClimbing && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -333,7 +365,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && slideCoroutine == null)
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && !isClimbing && slideCoroutine == null)
         {
             DisableMovement(false);
 
@@ -381,13 +413,14 @@ public class Guardian : MonoBehaviour
                 {
                     enemy.GetComponent<Drone>().TakeDamage(meleeDamage);
                 }
-
                 else if (enemy.GetComponent<StationaryDrone>() != null)
                 {
                     enemy.GetComponent<StationaryDrone>().TakeDamage(meleeDamage);
                 }
-
-
+                else if (enemy.GetComponent<A2Boss>() != null)
+                {
+                    enemy.GetComponent<A2Boss>().TakeDamage(meleeDamage);
+                }
             }
         }
 
@@ -468,18 +501,31 @@ public class Guardian : MonoBehaviour
         {
             Reset();
         }
-    }
 
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        string layerName = LayerMask.LayerToName(col.gameObject.layer);
-
+        // Get orbs
         if (layerName == "Orb")
         {
             PD.orbCount += 5;
             orbCountText.text = PD.orbCount.ToString();
         }
 
+        // Touching ladder
+        if (col.CompareTag("Ladder"))
+        {
+            isTouchingLadder = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ladder"))
+        {
+            isTouchingLadder = false;
+            isClimbing = false;
+            gameObject.layer = LayerMask.NameToLayer("Player");
+            animator.SetBool("isClimbing", false);
+            animator.speed = 1f;
+        }
     }
 
     void Die()
