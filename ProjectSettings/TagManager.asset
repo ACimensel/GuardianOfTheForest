@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Ladder
   layers:
   - Default
   - TransparentFX
@@ -28,8 +29,8 @@ TagManager:
   - Orb
   - Sliding
   - Fire
-  - 
-  - 
+  - LadderBGround
+  - Climbing
   - 
   - 
   - 
@@ -44,6 +45,9 @@ TagManager:
     locked: 0
   - name: Traps
     uniqueID: 3720810423
+    locked: 0
+  - name: LadderBackground
+    uniqueID: 1600706025
     locked: 0
   - name: Ladder
     uniqueID: 2878198949
