@@ -23,7 +23,7 @@ public class TurnOnWall : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col){
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
 
-        if (layerName == "Player"){
+        if (layerName == "Player" || layerName == "Sliding"){
             wall.SetActive(true);
         }
     }
