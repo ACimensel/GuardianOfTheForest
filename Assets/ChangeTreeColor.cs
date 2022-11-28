@@ -16,14 +16,9 @@ public class ChangeTreeColor : MonoBehaviour
 
     private void Awake() {
         spriteRenderer = GetComponent<SpriteRenderer>();
-    }
-
-    private void Start()
-    {
         isDark = true;
         spriteRenderer.color = dark;
     }
-
 
     public void SetColorLight(){
         if(isDark){

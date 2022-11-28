@@ -114,6 +114,9 @@ public class Guardian : MonoBehaviour
     private void Start()
     {
         gravScale = rb.gravityScale;
+        
+        if(lastRespawnLocation)
+            lastRespawnLocation.GetComponent<ChangeTreeColor>().SetColorLight();
     }
 
     void Update()
