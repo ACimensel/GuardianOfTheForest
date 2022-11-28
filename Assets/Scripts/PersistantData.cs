@@ -24,6 +24,7 @@ public class PersistantData : MonoBehaviour
     public bool secondTransitionPlayed = false;
     public bool portalOpenTransitionPlayed = false;
     public bool fullyHealedTransitionPlayed = false;
+    public int lastAreaFromHub = 0;
 
     void Awake(){
         if(PD != null){

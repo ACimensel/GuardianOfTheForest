@@ -5,6 +5,7 @@ using UnityEngine;
 public class TurnOnWall : MonoBehaviour
 {
     [SerializeField] GameObject wall;
+    [SerializeField] int areaNumber = 0;
 
     private PersistantData PD;
 
@@ -13,7 +14,9 @@ public class TurnOnWall : MonoBehaviour
     }
 
     void Start(){
-        if(PD && PD.area1BossKilled == true)
+        if(PD && PD.area1BossKilled == true && areaNumber == 1)
+            Destroy(gameObject);
+        else if(PD && PD.area2BossKilled == true && areaNumber == 2)
             Destroy(gameObject);
     }
         

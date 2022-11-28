@@ -114,6 +114,9 @@ public class Guardian : MonoBehaviour
     private void Start()
     {
         gravScale = rb.gravityScale;
+        
+        if(lastRespawnLocation)
+            lastRespawnLocation.GetComponent<ChangeTreeColor>().SetColorLight();
     }
 
     void Update()
@@ -482,6 +485,16 @@ public class Guardian : MonoBehaviour
         if (col.CompareTag("Ladder"))
         {
             isTouchingLadder = true;
+        }
+
+        // Touch waypoint
+        if(layerName == "Waypoint" && lastRespawnLocation != col.gameObject)
+        {
+            if(lastRespawnLocation)
+                lastRespawnLocation.GetComponent<ChangeTreeColor>().SetColorDark();
+
+            lastRespawnLocation = col.gameObject;
+            lastRespawnLocation.GetComponent<ChangeTreeColor>().SetColorLight();
         }
     }
 

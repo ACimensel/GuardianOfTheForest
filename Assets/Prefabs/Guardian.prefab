@@ -312,7 +312,6 @@ GameObject:
   - component: {fileID: 278275423706400930}
   - component: {fileID: 278275423706400935}
   - component: {fileID: 1255839356}
-  - component: {fileID: 681917573}
   m_Layer: 6
   m_Name: Guardian
   m_TagString: Player
@@ -463,6 +462,7 @@ MonoBehaviour:
   slideDuration: 0.2
   slideCooldown: 2
   slideCooldownCounter: 0
+  speed: 6
 --- !u!50 &278275423706400928
 Rigidbody2D:
   serializedVersion: 4
@@ -519,7 +519,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 278275423706400943}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: c32bad687e8f58a42ad153a1b764ad39, type: 2}
+  m_Material: {fileID: 6200000, guid: d0056c69a7fd25f439cdb7b26ed3392a, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -642,18 +642,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &681917573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 278275423706400943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db6cc4305c314c43ae51ff75549d494, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3479005499675353074
 GameObject:
   m_ObjectHideFlags: 0

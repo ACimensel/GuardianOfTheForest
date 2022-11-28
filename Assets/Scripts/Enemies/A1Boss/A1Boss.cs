@@ -31,6 +31,7 @@ public class A1Boss : MonoBehaviour
     private bool isDamageEnabled;
     private Renderer rend;
     private Color startColor;
+    private PersistantData PD;
 
     bool detectedPlayer;
     bool isDead;
@@ -49,6 +50,10 @@ public class A1Boss : MonoBehaviour
 
     void Awake()
     {
+        PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
+        if(PD.area1BossKilled)
+            Destroy(gameObject);
+
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         facingRight = false;
@@ -63,7 +68,6 @@ public class A1Boss : MonoBehaviour
         dashTime = startDashTime;
         bc2d = GetComponent<BoxCollider2D>();
         cc2d = GetComponent<CircleCollider2D>();
-
     }
 
     void Start()
@@ -238,6 +242,9 @@ public class A1Boss : MonoBehaviour
                 gameObject.layer = LayerMask.NameToLayer("Dead");
                 rb.velocity = new Vector2(0f, 0f);
                 essence.SetActive(true);
+
+                GetComponent<DropOrbs>().Drop();
+                PD.area1BossKilled = true;
             }
         }
     }

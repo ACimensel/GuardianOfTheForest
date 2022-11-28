@@ -55,11 +55,11 @@ public class Bolt : MonoBehaviour
         
         if(isBoltGoingRight == portalPos){
             // Move Position
-            transform.position = new Vector3(teleport.pairPos.x, transform.position.y, transform.position.z);
+            transform.position = new Vector3(teleport.pairPos.x, teleport.pairPos.y, transform.position.z);
         }
         else if((isBoltGoingRight == 0 && portalPos == 1) || (isBoltGoingRight == 1 && portalPos == 0)){
             // Move Position
-            transform.position = new Vector3(teleport.pairPos.x, transform.position.y, transform.position.z);
+            transform.position = new Vector3(teleport.pairPos.x, teleport.pairPos.y, transform.position.z);
 
             // Flip direction and velocity
             Vector3 scale = transform.localScale;
