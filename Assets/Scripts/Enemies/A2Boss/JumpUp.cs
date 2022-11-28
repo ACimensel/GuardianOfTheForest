@@ -23,6 +23,8 @@ public class JumpUp : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        a2boss.LookAtPlayer();
+
         float dist = Vector3.Distance(guardian.transform.position, a2boss.transform.position);
         dist = dist - 0.5f;
 
