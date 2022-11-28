@@ -111,7 +111,8 @@ public class Guardian : MonoBehaviour
         healthBar.InitializeHealthBar(PD.guardianMaxHealth, PD.guardianCurrentHealth);
     }
 
-    private void Start() {
+    private void Start()
+    {
         gravScale = rb.gravityScale;
     }
 
@@ -129,7 +130,7 @@ public class Guardian : MonoBehaviour
                 animator.speed = 1f;
                 gameObject.layer = LayerMask.NameToLayer("Climbing");
             }
-            else if(vertical == 0f && isClimbing)
+            else if (vertical == 0f && isClimbing)
                 animator.speed = 0f;
 
             if (isGrounded)
@@ -419,6 +420,10 @@ public class Guardian : MonoBehaviour
                 {
                     enemy.GetComponent<A2Boss>().TakeDamage(meleeDamage);
                 }
+                else if (enemy.GetComponent<Tree>() != null)
+                {
+                    enemy.GetComponent<Tree>().TakeDamage(meleeDamage);
+                }
             }
         }
 
@@ -481,7 +486,8 @@ public class Guardian : MonoBehaviour
     }
 
 
-    private void OnTriggerStay2D(Collider2D col) {
+    private void OnTriggerStay2D(Collider2D col)
+    {
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
         Debug.Log("OnTriggerStay2D: Hit by layer: " + layerName);
 

@@ -5,6 +5,8 @@ using Pathfinding;
 
 public class Drone : MonoBehaviour
 {
+    public float explosionCountdown;
+
     private float destroyTime = 0.5f;
     public int health = 1;
     public float patrolSpeed = 50f;
@@ -33,6 +35,7 @@ public class Drone : MonoBehaviour
         rb = animator.GetComponent<Rigidbody2D>();
         startColor = rend.material.color;
         player = GameObject.Find("Guardian").GetComponent<Transform>();
+        explosionCountdown = 5f;
     }
 
     void OnPathComplete(Path p)
@@ -110,6 +113,20 @@ public class Drone : MonoBehaviour
 
     }
 
+    void CountdownToExplode()
+    {
+        if (explosionCountdown > 0f)
+        {
+            explosionCountdown -= Time.deltaTime;
+            Debug.Log(explosionCountdown);
+        }
+
+        if (explosionCountdown < 0f)
+        {
+            TakeDamage(1);
+        }
+    }
+
     void AdjustDirection()
     {
         if (rb.velocity.x > 0)
@@ -127,6 +144,10 @@ public class Drone : MonoBehaviour
     void Update()
     {
         AdjustDirection();
+        if (detectedPlayer)
+        {
+            CountdownToExplode();
+        }
     }
 
 
@@ -143,7 +164,6 @@ public class Drone : MonoBehaviour
         StartCoroutine("DestroyAfterTime");
         gameObject.layer = LayerMask.NameToLayer("Dead");
         GetComponent<DropOrbs>().Drop();
-
     }
 
     private void StopMoving()
