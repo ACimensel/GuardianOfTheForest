@@ -9,6 +9,7 @@ public class A2Boss : MonoBehaviour
     [SerializeField] float invulnerabilityTime = 1f;
     [SerializeField] float flashTime = 0.8f;
     [SerializeField] GameObject dronePrefab;
+    [SerializeField] GameObject essence;
 
     public int health = 60;
     public float walkSpeed = 5f;
@@ -20,6 +21,7 @@ public class A2Boss : MonoBehaviour
     private Animator animator;
 
     private Color startColor;
+    private PersistantData PD;
 
 
     private bool isDamageEnabled = true;
@@ -42,6 +44,7 @@ public class A2Boss : MonoBehaviour
 
     void Awake()
     {
+        PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         animator = GetComponent<Animator>();
         rend = GetComponent<Renderer>();
@@ -128,8 +131,10 @@ public class A2Boss : MonoBehaviour
                 animator.SetBool("isDead", true);
                 StartCoroutine("DestroyAfterTime");
                 gameObject.layer = LayerMask.NameToLayer("Dead");
+                essence.SetActive(true);
 
                 GetComponent<DropOrbs>().Drop();
+                PD.area2BossKilled = true;
             }
         }
     }
