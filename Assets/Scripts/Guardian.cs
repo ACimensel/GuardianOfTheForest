@@ -158,11 +158,10 @@ public class Guardian : MonoBehaviour
 
     void FixedUpdate()
     {
-        
         if (isClimbing)
         {
             rb.gravityScale = 0f;
-            rb.velocity = new Vector2(rb.velocity.x, vertical * speed);
+            rb.velocity = new Vector2(rb.velocity.x / 1.5f, vertical * speed);
         }
         else
         {
@@ -302,7 +301,6 @@ public class Guardian : MonoBehaviour
             {
                 slideCoroutine = StartCoroutine(SlideForXTime(dirX));
                 slideCooldownCounter = slideCooldown;
-                Debug.Log("RESET: " + slideCooldownCounter);
             }
         }
 
@@ -466,9 +464,28 @@ public class Guardian : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         string layerName = LayerMask.LayerToName(col.gameObject.layer);
-        Debug.Log("Hit by layer: " + layerName);
+        Debug.Log("OnTriggerEnter2D: Hit by layer: " + layerName);
 
-        if (layerName == "EnemyAttack" && isDamageEnabled)
+        // Get orbs
+        if (layerName == "Orb")
+        {
+            PD.orbCount += 5;
+            orbCountText.text = PD.orbCount.ToString();
+        }
+
+        // Touching ladder
+        if (col.CompareTag("Ladder"))
+        {
+            isTouchingLadder = true;
+        }
+    }
+
+
+    private void OnTriggerStay2D(Collider2D col) {
+        string layerName = LayerMask.LayerToName(col.gameObject.layer);
+        Debug.Log("OnTriggerStay2D: Hit by layer: " + layerName);
+
+        if ((layerName == "EnemyAttack" || layerName == "Fire") && isDamageEnabled)
         {
             isDamageEnabled = false;
             DisableMovement();
@@ -500,19 +517,6 @@ public class Guardian : MonoBehaviour
         else if (layerName == "Essence")
         {
             Reset();
-        }
-
-        // Get orbs
-        if (layerName == "Orb")
-        {
-            PD.orbCount += 5;
-            orbCountText.text = PD.orbCount.ToString();
-        }
-
-        // Touching ladder
-        if (col.CompareTag("Ladder"))
-        {
-            isTouchingLadder = true;
         }
     }
 
