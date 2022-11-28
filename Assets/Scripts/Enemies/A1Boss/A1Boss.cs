@@ -51,6 +51,9 @@ public class A1Boss : MonoBehaviour
     void Awake()
     {
         PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
+        if(PD.area1BossKilled)
+            Destroy(gameObject);
+
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         facingRight = false;
