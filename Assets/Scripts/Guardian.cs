@@ -478,6 +478,16 @@ public class Guardian : MonoBehaviour
         {
             isTouchingLadder = true;
         }
+
+        // Touch waypoint
+        if(layerName == "Waypoint" && lastRespawnLocation != col.gameObject)
+        {
+            if(lastRespawnLocation)
+                lastRespawnLocation.GetComponent<ChangeTreeColor>().SetColorDark();
+
+            lastRespawnLocation = col.gameObject;
+            lastRespawnLocation.GetComponent<ChangeTreeColor>().SetColorLight();
+        }
     }
 
 
