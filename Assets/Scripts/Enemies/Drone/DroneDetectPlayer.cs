@@ -34,6 +34,7 @@ public class DroneDetectPlayer : MonoBehaviour
         if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
         {
             animator.SetBool("detectedPlayer", false);
+            drone.explosionCountdown = 5f;
         }
     }
 }

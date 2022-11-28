@@ -64,7 +64,7 @@ public class A2Boss : MonoBehaviour
     void Update()
     {
         animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-        animationName = animCurrentClipInfo[0].clip.name;
+        animationName = animCurrentClipInfo[0].clip.name;        
 
         if (Vector2.Distance(player.position, rb.position) < attackRange)
         {
@@ -91,8 +91,6 @@ public class A2Boss : MonoBehaviour
             LookAtPlayer();
             if (Vector2.Distance(player.position, rb.position) > attackRange)
             {
-                //rb.velocity = new Vector2(rb.velocity.x, 30f); // jump
-
                 Vector2 target = new Vector2(player.position.x, rb.position.y);
                 Vector2 newPos = Vector2.MoveTowards(rb.position, target, walkSpeed * Time.fixedDeltaTime);
                 rb.MovePosition(newPos);

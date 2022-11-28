@@ -39,8 +39,7 @@ public class Shield : MonoBehaviour
 
     void Start()
     {
-                shield.SetActive(false);
-
+            shield.SetActive(false);
     }
 
     void Update()
