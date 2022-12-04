@@ -8,6 +8,7 @@ public class Guardian : MonoBehaviour
 {
     [SerializeField] GameObject boltPrefab;
     [SerializeField] GameObject teleportPrefab;
+    [SerializeField] GameObject startLocation;
     [SerializeField] GameObject lastRespawnLocation;
     [SerializeField] GameObject tilesToTurnOff;
     [SerializeField] AudioClip[] meleeSounds;
@@ -581,7 +582,7 @@ public class Guardian : MonoBehaviour
         isDamageEnabled = true;
         animator.SetBool("isDead", false);
 
-        Vector3 treePos = lastRespawnLocation.transform.position;
+        Vector3 treePos = startLocation.transform.position;
         this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 1.5f, treePos.z);
 
         EnableMovement();

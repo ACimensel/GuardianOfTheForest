@@ -51978,6 +51978,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 349953263}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+      propertyPath: startLocation
+      value: 
+      objectReference: {fileID: 1370329597}
+    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: tilesToTurnOff
       value: 
       objectReference: {fileID: 850839051}
