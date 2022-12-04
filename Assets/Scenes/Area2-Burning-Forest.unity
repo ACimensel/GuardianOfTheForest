@@ -613,7 +613,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2482420279255231409, guid: ccf35b3d83eb4724ebfa2d4b85734c3a, type: 3}
       propertyPath: health
-      value: 50
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2482420279255231409, guid: ccf35b3d83eb4724ebfa2d4b85734c3a, type: 3}
       propertyPath: player
@@ -51919,7 +51919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.46
+      value: -4.32
       objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_LocalPosition.y
