@@ -43,7 +43,7 @@ public class Guardian : MonoBehaviour
     private float dirX = 0f;
     private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
     private float attackStaggerTime = 0.5f;
-    private bool isGrounded = false; // Whether or not the player is grounded.
+    [HideInInspector] public static bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
     private Vector3 velocity = Vector3.zero;
@@ -123,6 +123,9 @@ public class Guardian : MonoBehaviour
     {
         if (isMovementEnabled)
         {
+            if(Input.GetAxisRaw("Horizontal") > 0.25f || Input.GetAxisRaw("Horizontal") < -0.25f)
+                transform.SetParent(null);
+
             dirX = Input.GetAxisRaw("Horizontal") * moveSpeed;
             vertical = Input.GetAxisRaw("Climb");
 
@@ -190,13 +193,21 @@ public class Guardian : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, checkRadius, whatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
-            if (colliders[i].gameObject != gameObject)
+            Collider2D col = colliders[i]; 
+            if (col.gameObject != gameObject)
             {
                 isGrounded = true;
 
                 if (!wasGrounded)
                 {
                     OnLandEvent.Invoke();
+                }
+
+                if(col.CompareTag("MovingPlatform")){
+                    transform.SetParent(col.transform);
+                }
+                else{
+                    transform.SetParent(null);
                 }
             }
         }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Ladder
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
