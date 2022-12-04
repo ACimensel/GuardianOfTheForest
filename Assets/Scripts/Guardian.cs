@@ -266,7 +266,7 @@ public class Guardian : MonoBehaviour
     }
 
 
-    IEnumerator SlideForXTime(float _dirX)
+    IEnumerator SlideForXTime()
     {
         isMovementEnabled = false;
         isDamageEnabled = false;
@@ -283,7 +283,7 @@ public class Guardian : MonoBehaviour
         {
             if (!isGrounded) break;
 
-            rb.velocity = (_dirX > 0f) ? new Vector2(slideSpeed, rb.velocity.y) : new Vector2(-slideSpeed, rb.velocity.y);
+            rb.velocity = (facingRight) ? new Vector2(slideSpeed, rb.velocity.y) : new Vector2(-slideSpeed, rb.velocity.y);
 
             yield return new WaitForSeconds(coroutineInvervalTime);
             runningTime += coroutineInvervalTime;
@@ -312,11 +312,10 @@ public class Guardian : MonoBehaviour
         // Debug.Log("slideCooldownCounter: " + slideCooldownCounter);
         if (Input.GetButtonDown("Slide") && slideCoroutine == null && isGrounded && isMovementEnabled && slideCooldownCounter <= 0f)
         {
-            if (dirX != 0f)
-            {
-                slideCoroutine = StartCoroutine(SlideForXTime(dirX));
+            // if (dirX != 0f) {
+                slideCoroutine = StartCoroutine("SlideForXTime");
                 slideCooldownCounter = slideCooldown;
-            }
+            // }
         }
 
         // Transition from jumping to falling animation
