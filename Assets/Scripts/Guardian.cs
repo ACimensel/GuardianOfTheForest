@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using EZCameraShake;
 
 public class Guardian : MonoBehaviour
 {
@@ -147,6 +148,8 @@ public class Guardian : MonoBehaviour
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
             {
+                // CameraShaker.Instance.ShakeOnce(4f, 4f, 1f, 1f);
+
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -596,7 +599,7 @@ public class Guardian : MonoBehaviour
     }
 
 
-    void DisableMovement(bool stagger = true)
+    public void DisableMovement(bool stagger = true)
     {
         animator.SetBool("isStaggered", stagger);
 
@@ -608,7 +611,7 @@ public class Guardian : MonoBehaviour
     }
 
 
-    void EnableMovement(bool wasStaggered = true)
+    public void EnableMovement(bool wasStaggered = true)
     {
         if (wasStaggered)
             animator.SetBool("isStaggered", false);

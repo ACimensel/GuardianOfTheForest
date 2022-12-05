@@ -44,5 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea3273126959ddf4e98e3d5e7da6d9ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guardianMaxHealth: 10
+  guardianCurrentHealth: 10
+  orbCount: 0
+  area1BossCinematicPlayed: 0
   area1BossKilled: 0
+  area2BossCinematicPlayed: 0
   area2BossKilled: 0
+  finalBossKilled: 0
+  firstTransitionPlayed: 0
+  secondTransitionPlayed: 0
+  portalOpenTransitionPlayed: 0
+  fullyHealedTransitionPlayed: 0
+  lastAreaFromHub: 0

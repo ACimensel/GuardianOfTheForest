@@ -14,7 +14,9 @@ public class PersistantData : MonoBehaviour
 
     // Boss Data
     [Header("Boss Data")] [Space]
+    public bool area1BossCinematicPlayed = false;
     public bool area1BossKilled = false;
+    public bool area2BossCinematicPlayed = false;
     public bool area2BossKilled = false;
     public bool finalBossKilled = false;
 
@@ -30,8 +32,9 @@ public class PersistantData : MonoBehaviour
         if(PD != null){
             Destroy(this.gameObject);
         }
-        else
+        else{
             PD = this;   
             DontDestroyOnLoad(this);
         }
+    }
 }

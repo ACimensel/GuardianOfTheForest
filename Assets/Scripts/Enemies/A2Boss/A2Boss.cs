@@ -58,7 +58,8 @@ public class A2Boss : MonoBehaviour
 
     void Start()
     {
-
+        if(!PD.area2BossCinematicPlayed)
+            gameObject.SetActive(false);
     }
 
     void Update()

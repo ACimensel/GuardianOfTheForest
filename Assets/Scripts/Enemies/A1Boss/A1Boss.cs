@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class A1Boss : MonoBehaviour
 {
-
     private Animator animator;
     private Rigidbody2D rb;
     public float patrolSpeed = 5f;
@@ -72,7 +71,8 @@ public class A1Boss : MonoBehaviour
 
     void Start()
     {
-
+        if(!PD.area1BossCinematicPlayed)
+            gameObject.SetActive(false);
     }
 
     void FixedUpdate()
