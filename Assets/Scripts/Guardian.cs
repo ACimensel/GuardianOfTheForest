@@ -28,7 +28,7 @@ public class Guardian : MonoBehaviour
     public TextMeshProUGUI orbCountText;
     public HealthBar healthBar;
     public Transform attackPoint;
-    public float attackRange = 0.5f;
+    public float attackRange = 1.25f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
     public bool isTeleportEnabled = true;
@@ -44,7 +44,7 @@ public class Guardian : MonoBehaviour
     private float checkRadius = .1f; // Radius of the overlap circle to determine if grounded
     private float dirX = 0f;
     private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
-    private float attackStaggerTime = 0.5f;
+    private float attackStaggerTime = 0.35f;
     [HideInInspector] public static bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
@@ -358,7 +358,7 @@ public class Guardian : MonoBehaviour
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine("WaitForAttackFinish");
+            attackCoroutine = StartCoroutine(WaitForAttackFinish(1.42f));
 
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");
@@ -390,7 +390,7 @@ public class Guardian : MonoBehaviour
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine("WaitForAttackFinish");
+            attackCoroutine = StartCoroutine(WaitForAttackFinish());
 
             if (animationName == "Guardian_melee1")
             {
@@ -680,9 +680,9 @@ public class Guardian : MonoBehaviour
     }
 
 
-    IEnumerator WaitForAttackFinish()
+    IEnumerator WaitForAttackFinish(float multiplier = 1f)
     {
-        yield return new WaitForSeconds(attackStaggerTime);
+        yield return new WaitForSeconds(attackStaggerTime * multiplier);
 
         EnableMovement(false);
         animator.SetInteger("nextAttackState", (int)AttackStates.NONE);
