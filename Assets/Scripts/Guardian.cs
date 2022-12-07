@@ -383,7 +383,7 @@ public class Guardian : MonoBehaviour
         // Melee attack
         if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && !isClimbing && slideCoroutine == null)
         {
-            DisableMovement(false);
+            // DisableMovement(false);
 
             AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
             string animationName = animCurrentClipInfo[0].clip.name;
