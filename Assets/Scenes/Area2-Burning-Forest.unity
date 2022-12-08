@@ -52039,10 +52039,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 681917573, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -52092,10 +52088,6 @@ PrefabInstance:
       value: Guardian
       objectReference: {fileID: 0}
     - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
-      propertyPath: speed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
       propertyPath: healthBar
       value: 
       objectReference: {fileID: 104133404}
@@ -52119,8 +52111,7 @@ PrefabInstance:
       propertyPath: lastRespawnLocation
       value: 
       objectReference: {fileID: 1370329597}
-    m_RemovedComponents:
-    - {fileID: 681917573, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
 --- !u!1 &804690318
 GameObject:

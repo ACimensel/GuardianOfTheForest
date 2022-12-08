@@ -148,8 +148,6 @@ public class Guardian : MonoBehaviour
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
             {
-                // CameraShaker.Instance.ShakeOnce(4f, 4f, 1f, 1f);
-
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -530,6 +528,7 @@ public class Guardian : MonoBehaviour
             DisableMovement();
 
             Debug.Log("DAMAGED");
+            CameraShaker.Instance.ShakeOnce(4f, 4f, 0.1f, 0.1f);
             PD.guardianCurrentHealth--;
             healthBar.SetHealth(PD.guardianCurrentHealth);
 

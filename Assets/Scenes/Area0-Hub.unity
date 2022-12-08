@@ -205,8 +205,16 @@ PrefabInstance:
       value: TeleSquare1
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Size.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Size.y
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Offset.x
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Offset.y
@@ -706,8 +714,16 @@ PrefabInstance:
       value: TeleSquare2
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Size.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Size.y
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Offset.x
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Offset.y
