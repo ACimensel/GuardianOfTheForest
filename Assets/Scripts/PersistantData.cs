@@ -18,6 +18,7 @@ public class PersistantData : MonoBehaviour
     public bool area1BossKilled = false;
     public bool area2BossCinematicPlayed = false;
     public bool area2BossKilled = false;
+    public bool finalBossCinematicPlayed = false;
     public bool finalBossKilled = false;
 
     // Hub Tree Data

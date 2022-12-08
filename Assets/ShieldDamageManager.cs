@@ -33,7 +33,4 @@ public class ShieldDamageManager : MonoBehaviour
 
         }
     }
-
-
-
 }

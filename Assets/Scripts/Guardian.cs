@@ -28,11 +28,12 @@ public class Guardian : MonoBehaviour
     public TextMeshProUGUI orbCountText;
     public HealthBar healthBar;
     public Transform attackPoint;
-    public float attackRange = 0.5f;
+    public float attackRange = 1.25f;
     public bool isDamageEnabled = true;
     public bool isRangedEnabled = true;
     public bool isTeleportEnabled = true;
     public bool isMovementEnabled = true;
+    public bool isFrozen = false;
     public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
     private PersistantData PD;
@@ -44,7 +45,7 @@ public class Guardian : MonoBehaviour
     private float checkRadius = .1f; // Radius of the overlap circle to determine if grounded
     private float dirX = 0f;
     private float fallTolerance = -3f; // used to not play falling animation when walking down slopes
-    private float attackStaggerTime = 0.5f;
+    private float attackStaggerTime = 0.35f;
     [HideInInspector] public static bool isGrounded = false; // Whether or not the player is grounded.
     private bool facingRight = true;
     private Coroutine attackCoroutine = null;
@@ -148,8 +149,6 @@ public class Guardian : MonoBehaviour
 
             if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
             {
-                // CameraShaker.Instance.ShakeOnce(4f, 4f, 1f, 1f);
-
                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
                 animator.SetBool("isJumping", true);
 
@@ -352,13 +351,13 @@ public class Guardian : MonoBehaviour
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && !isClimbing && slideCoroutine == null)
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && !isClimbing && slideCoroutine == null && !isFrozen)
         {
             DisableMovement(false);
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine("WaitForAttackFinish");
+            attackCoroutine = StartCoroutine(WaitForAttackFinish(1.4f));
 
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");
@@ -367,12 +366,18 @@ public class Guardian : MonoBehaviour
             if (facingRight)
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-                bolt.SendMessage("SetVelocity", "right");
+                if(Input.GetAxisRaw("Horizontal") > 0f && !isGrounded)
+                    bolt.SendMessage("GoRight", true);
+                else
+                    bolt.SendMessage("GoRight", false);
             }
             else
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-                bolt.SendMessage("SetVelocity", "left");
+                if(Input.GetAxisRaw("Horizontal") < 0f && !isGrounded)
+                    bolt.SendMessage("GoLeft", true);
+                else
+                    bolt.SendMessage("GoLeft", false);
             }
 
             // cooldown
@@ -381,16 +386,16 @@ public class Guardian : MonoBehaviour
         }
 
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && !isClimbing && slideCoroutine == null)
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && !isClimbing && slideCoroutine == null && !isFrozen)
         {
-            DisableMovement(false);
+            // DisableMovement(false);
 
             AnimatorClipInfo[] animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
             string animationName = animCurrentClipInfo[0].clip.name;
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine("WaitForAttackFinish");
+            attackCoroutine = StartCoroutine(WaitForAttackFinish());
 
             if (animationName == "Guardian_melee1")
             {
@@ -524,6 +529,7 @@ public class Guardian : MonoBehaviour
             DisableMovement();
 
             Debug.Log("DAMAGED");
+            CameraShaker.Instance.ShakeOnce(4f, 4f, 0.1f, 0.1f);
             PD.guardianCurrentHealth--;
             healthBar.SetHealth(PD.guardianCurrentHealth);
 
@@ -549,7 +555,7 @@ public class Guardian : MonoBehaviour
         }
         else if (layerName == "Essence")
         {
-            Reset();
+            Reset(true);
         }
     }
 
@@ -580,12 +586,16 @@ public class Guardian : MonoBehaviour
     }
 
 
-    void Reset()
+    void Reset(bool sendBackToStartOfLevel = false)
     {
         isDamageEnabled = true;
         animator.SetBool("isDead", false);
 
-        Vector3 treePos = startLocation.transform.position;
+        Vector3 treePos;
+        if(sendBackToStartOfLevel)
+            treePos = startLocation.transform.position;
+        else
+            treePos = lastRespawnLocation.transform.position;
         this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 1.5f, treePos.z);
 
         EnableMovement();
@@ -596,6 +606,17 @@ public class Guardian : MonoBehaviour
         gameManager.Revive();
 
         tilesToTurnOff.SetActive(false);
+    }
+
+
+    public void Freeze()
+    {
+        isFrozen = true;
+        isMovementEnabled = false;
+        dirX = 0;
+
+        if (isGrounded)
+            rb.velocity = new Vector2(0f, rb.velocity.y);
     }
 
 
@@ -680,9 +701,9 @@ public class Guardian : MonoBehaviour
     }
 
 
-    IEnumerator WaitForAttackFinish()
+    IEnumerator WaitForAttackFinish(float multiplier = 1f)
     {
-        yield return new WaitForSeconds(attackStaggerTime);
+        yield return new WaitForSeconds(attackStaggerTime * multiplier);
 
         EnableMovement(false);
         animator.SetInteger("nextAttackState", (int)AttackStates.NONE);

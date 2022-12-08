@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 175374679}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.65, y: 0.219, z: 0}
+  m_LocalPosition: {x: 0.7, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -386,7 +386,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.4117646, y: 2.8235295}
+  m_Size: {x: 1.882353, y: 1.882353}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -406,6 +406,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boltPrefab: {fileID: 4106640351002158497, guid: 7eda9a1f46e7e0546947f3d628f9bc52, type: 3}
   teleportPrefab: {fileID: 2939313765097063019, guid: 5163fdf3b29de1045a7294e7f1236181, type: 3}
+  startLocation: {fileID: 0}
   lastRespawnLocation: {fileID: 0}
   tilesToTurnOff: {fileID: 0}
   meleeSounds:
@@ -425,13 +426,13 @@ MonoBehaviour:
   flashTime: 0.2
   hitStaggerTime: 0.2
   invulnerabilityTime: 1
-  rangedCooldownTime: 3
+  rangedCooldownTime: 1
   teleportCooldownTime: 5
   meleeDamage: 10
   orbCountText: {fileID: 0}
   healthBar: {fileID: 0}
   attackPoint: {fileID: 175374680}
-  attackRange: 0.9
+  attackRange: 1.4
   isDamageEnabled: 1
   isRangedEnabled: 1
   isTeleportEnabled: 1
@@ -502,7 +503,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1.882353, y: 1.882353}
-    newSize: {x: 3.4117646, y: 2.8235295}
+    newSize: {x: 1.882353, y: 1.882353}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -656,6 +657,7 @@ GameObject:
   - component: {fileID: 3479005499675353078}
   - component: {fileID: 3479005499675353076}
   - component: {fileID: 3479005499675353077}
+  - component: {fileID: 1434493463}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -794,3 +796,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f820dec9aedb66419e028677603aaee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1434493463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3479005499675353074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab8353b5ebd32545867da143199a814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DefaultPosInfluence: {x: 0.15, y: 0.15, z: 0.15}
+  DefaultRotInfluence: {x: 1, y: 1, z: 0}
+  RestPositionOffset: {x: 0, y: 0, z: 0}
+  RestRotationOffset: {x: 0, y: 0, z: 0}

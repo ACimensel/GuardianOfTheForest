@@ -37,19 +37,6 @@ public class Bolt : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    void SetVelocity(string direction){
-        if (direction == "right"){
-            isBoltGoingRight = 1;
-            GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, 0f);
-        }
-        else if (direction == "left"){
-            isBoltGoingRight = 0;
-            Vector3 scale = transform.localScale;
-            transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
-            GetComponent<Rigidbody2D>().velocity = new Vector2(-moveSpeed, 0f);
-        }
-    }
-
     public void ChangeBolt(){
         int portalPos = teleport.PortalPosition(); // -1 = no pair, 0 = hit portal on left, 1 = hit portal on right, 2 = same spot
         
@@ -72,11 +59,15 @@ public class Bolt : MonoBehaviour
         GetComponent<SpriteRenderer>().color = new Color(0/255f, 247/255f, 189/255f);
     }
 
-    void GoRight(){
-        GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, 0f);
+    void GoRight(bool moving = false){
+        isBoltGoingRight = 1;
+        GetComponent<Rigidbody2D>().velocity = (!moving) ? new Vector2(moveSpeed, 0f) : new Vector2(moveSpeed + 4f, 0f);
     }
 
-    void GoLeft(){
-        GetComponent<Rigidbody2D>().velocity = new Vector2(-moveSpeed, 0f);
+    void GoLeft(bool moving = false){
+        isBoltGoingRight = 0;
+        Vector3 scale = transform.localScale;
+        transform.localScale = new Vector3(-scale.x, scale.y, scale.z);
+        GetComponent<Rigidbody2D>().velocity = (!moving) ? new Vector2(-moveSpeed, 0f) : new Vector2(-moveSpeed - 4f, 0f);
     }
 }

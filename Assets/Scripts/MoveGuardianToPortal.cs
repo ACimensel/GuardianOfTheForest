@@ -17,7 +17,7 @@ public class MoveGuardianToPortal : MonoBehaviour
     {
         Vector3 pos = guardian.position;
         if(PD.lastAreaFromHub == 1){
-            guardian.position = new Vector3(portalToArea1.position.x - 2f, pos.y, pos.z);
+            guardian.position = new Vector3(portalToArea1.position.x - 6f, pos.y, pos.z);
         }
         else if(PD.lastAreaFromHub == 2){
             guardian.position = new Vector3(portalToArea2.position.x + 2f, pos.y, pos.z);
