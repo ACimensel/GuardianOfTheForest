@@ -15,6 +15,7 @@ public class Shield : MonoBehaviour
     private Animator animator;
 
     [SerializeField] public float shieldHealth;
+    [SerializeField] float maxCooldownTime;
     private TMP_Text shieldTimer;
     private Image shieldHolder;
     private Image shieldImg;
@@ -26,7 +27,7 @@ public class Shield : MonoBehaviour
         shield = GameObject.Find("Shield");
         isShieldActive = false;
         timeLeft = 6f;
-        cooldownTime = 12f;
+        cooldownTime = maxCooldownTime;
         isCoolingDown = false;
         animator = shield.GetComponent<Animator>();
         shieldHealth = 3f;
@@ -103,7 +104,7 @@ public class Shield : MonoBehaviour
         {
             ChangeImgOpacity(shieldImg, 1f);
             ChangeImgOpacity(shieldHolder, 1f);
-            if (cooldownTime < 0) { cooldownTime = 12f; }
+            if (cooldownTime < 0) { cooldownTime = maxCooldownTime; }
             ChangeTextOpacity(shieldTimer, 0f);
         }
     }
