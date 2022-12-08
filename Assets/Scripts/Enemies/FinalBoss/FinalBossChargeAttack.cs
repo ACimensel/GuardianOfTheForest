@@ -39,9 +39,12 @@ public class FinalBossChargeAttack : StateMachineBehaviour
         GameObject charge2 = Instantiate(chargePrefab, new Vector3(guardian.transform.position.x - 1f, guardian.transform.position.y + 12f, 0f), Quaternion.identity);
         GameObject charge3 = Instantiate(chargePrefab, new Vector3(guardian.transform.position.x + 1f, guardian.transform.position.y + 10f, 0f), Quaternion.identity);
 
+
         animator.SetBool("idle", false);
-        animator.SetBool("walk", true);
+        animator.SetBool("walk", true);        
     }
+
+
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

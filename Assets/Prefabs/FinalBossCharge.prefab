@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6974897811336341016}
   - component: {fileID: 6623353140453547214}
   - component: {fileID: 6046454246114842402}
+  - component: {fileID: 8922260402843216004}
   m_Layer: 11
   m_Name: FinalBossCharge
   m_TagString: Untagged
@@ -169,3 +170,16 @@ PolygonCollider2D:
       - {x: -0.089999996, y: 0.22}
       - {x: -0.08, y: 0.17999999}
       - {x: -0.07, y: 0.19}
+--- !u!114 &8922260402843216004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3435358240103886122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 307f1e8a1ed3122429cfb74230dfdfb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 5
