@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4106640351002158509}
   - component: {fileID: 4106640351002158498}
   - component: {fileID: 4106640351002158499}
-  - component: {fileID: 4106640351002158496}
   - component: {fileID: 1905957198929199687}
+  - component: {fileID: 4626615408280096743}
   - component: {fileID: 1332584631}
   - component: {fileID: -7215636842346819690}
   m_Layer: 7
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4106640351002158497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 866c717e4b49ff04aa9846a497619b3e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ffbe98bf36d85754e9c813e9776d39d7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -109,22 +109,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!58 &4106640351002158496
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4106640351002158497}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.42, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.2
 --- !u!114 &1905957198929199687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,6 +124,22 @@ MonoBehaviour:
   destroyTime: 2
   moveSpeed: 10
   enteredTeleport: 0
+--- !u!70 &4626615408280096743
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4106640351002158497}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.7, y: 1.2}
+  m_Direction: 0
 --- !u!50 &1332584631
 Rigidbody2D:
   serializedVersion: 4
