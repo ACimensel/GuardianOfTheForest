@@ -358,7 +358,7 @@ public class Guardian : MonoBehaviour
 
             if (attackCoroutine != null)
                 StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine(WaitForAttackFinish(1.42f));
+            attackCoroutine = StartCoroutine(WaitForAttackFinish(1.4f));
 
             animator.SetInteger("nextAttackState", (int)AttackStates.RANGED);
             animator.SetTrigger("RangedAttack");

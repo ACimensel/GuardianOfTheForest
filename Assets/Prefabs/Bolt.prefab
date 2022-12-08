@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2755395d59d52e0408a14f7b824688fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyTime: 2
-  moveSpeed: 10
+  destroyTime: 1
+  moveSpeed: 14
   enteredTeleport: 0
 --- !u!70 &4626615408280096743
 CapsuleCollider2D:

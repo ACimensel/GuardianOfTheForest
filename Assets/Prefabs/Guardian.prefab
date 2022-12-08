@@ -426,7 +426,7 @@ MonoBehaviour:
   flashTime: 0.2
   hitStaggerTime: 0.2
   invulnerabilityTime: 1
-  rangedCooldownTime: 3
+  rangedCooldownTime: 1
   teleportCooldownTime: 5
   meleeDamage: 10
   orbCountText: {fileID: 0}
