@@ -367,12 +367,18 @@ public class Guardian : MonoBehaviour
             if (facingRight)
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x + 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-                bolt.SendMessage("SetVelocity", "right");
+                if(Input.GetAxisRaw("Horizontal") > 0f && !isGrounded)
+                    bolt.SendMessage("GoRight", true);
+                else
+                    bolt.SendMessage("GoRight", false);
             }
             else
             {
                 GameObject bolt = Instantiate(boltPrefab, new Vector3(player.x - 0.4f, player.y + 0.2f, 0f), Quaternion.identity);
-                bolt.SendMessage("SetVelocity", "left");
+                if(Input.GetAxisRaw("Horizontal") < 0f && !isGrounded)
+                    bolt.SendMessage("GoLeft", true);
+                else
+                    bolt.SendMessage("GoLeft", false);
             }
 
             // cooldown
