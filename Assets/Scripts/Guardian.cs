@@ -555,7 +555,7 @@ public class Guardian : MonoBehaviour
         }
         else if (layerName == "Essence")
         {
-            Reset();
+            Reset(true);
         }
     }
 
@@ -586,12 +586,16 @@ public class Guardian : MonoBehaviour
     }
 
 
-    void Reset()
+    void Reset(bool sendBackToStartOfLevel = false)
     {
         isDamageEnabled = true;
         animator.SetBool("isDead", false);
 
-        Vector3 treePos = startLocation.transform.position;
+        Vector3 treePos;
+        if(sendBackToStartOfLevel)
+            treePos = startLocation.transform.position;
+        else
+            treePos = lastRespawnLocation.transform.position;
         this.gameObject.transform.position = new Vector3(treePos.x + 0.5f, treePos.y + 1.5f, treePos.z);
 
         EnableMovement();
