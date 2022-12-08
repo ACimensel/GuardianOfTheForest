@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using EZCameraShake;
 
 public class ChangeTree : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject playerDetectPoint;
+    [SerializeField] private Guardian guardianScr;
     private int bossesKilled = 0;
     private PersistantData PD;
     private Animator anim;
+    private float freezeTime = 4f;
 
     private void Awake() {
         PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
@@ -58,9 +62,26 @@ public class ChangeTree : MonoBehaviour
     private void Update() {
         Vector3 diff = player.transform.position - playerDetectPoint.transform.position;
         if(bossesKilled == 2 && !PD.portalOpenTransitionPlayed && diff.magnitude < 10f){
-            //TODO stop player movement
-            anim.SetTrigger("3to4");
             PD.portalOpenTransitionPlayed = true;
+            guardianScr.Freeze();
+            anim.SetTrigger("3to4");
+            CameraShaker.Instance.ShakeOnce(4f, 4f, freezeTime, freezeTime);
+            StartCoroutine("UnfreezePlayer");
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider){
+        if(PD.portalOpenTransitionPlayed && collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Sliding")) {
+            SceneManager.LoadScene(3);
+        }
+    }
+    
+    IEnumerator UnfreezePlayer()
+    {
+        yield return new WaitForSeconds(freezeTime);
+
+        guardianScr.isFrozen = false;
+        guardianScr.isMovementEnabled = true;
+        GetComponent<BoxCollider2D>().enabled = true;
     }
 }

@@ -512,6 +512,10 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Offset.x
       value: -4
       objectReference: {fileID: 0}
@@ -597,6 +601,7 @@ GameObject:
   - component: {fileID: 1265550575}
   - component: {fileID: 1265550577}
   - component: {fileID: 1265550578}
+  - component: {fileID: 1265550579}
   m_Layer: 0
   m_Name: Hub Tree
   m_TagString: Untagged
@@ -686,6 +691,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1806327294}
   playerDetectPoint: {fileID: 2041158896}
+  guardianScr: {fileID: 1806327301}
 --- !u!95 &1265550578
 Animator:
   serializedVersion: 4
@@ -706,6 +712,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!61 &1265550579
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265550574}
+  m_Enabled: 0
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 20.666666, y: 19.333334}
+    newSize: {x: 20.666666, y: 19.333334}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 6, y: 19.333334}
+  m_EdgeRadius: 0
 --- !u!114 &1322587077 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 260618567298474030, guid: 6b0386ccbf24e034ead898ff994d754a, type: 3}
@@ -738,6 +770,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
       propertyPath: firstTransitionPlayed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
+      propertyPath: secondTransitionPlayed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
+      propertyPath: area1BossCinematicPlayed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
+      propertyPath: area2BossCinematicPlayed
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1361858253686542019, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
@@ -801,6 +845,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 278275423706400929, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
   m_PrefabInstance: {fileID: 1083810862}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1806327301 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1856123335591363069, guid: 549fa78a4778b9b45a46433b6c0a796e, type: 3}
+  m_PrefabInstance: {fileID: 1083810862}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806327294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ac8c036f9e2db4e8ea6260c8a3aa77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1912756852
 PrefabInstance:
   m_ObjectHideFlags: 0

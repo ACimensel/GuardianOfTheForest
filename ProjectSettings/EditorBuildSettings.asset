@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Area2-Burning-Forest.unity
     guid: 0184b58a51491f5438c84842761e72bc
+  - enabled: 1
+    path: Assets/Scenes/AreaX-FinalBoss.unity
+    guid: b188e7f12eda2b94293c98df428d7571
   m_configObjects: {}
