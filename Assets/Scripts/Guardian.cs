@@ -33,6 +33,7 @@ public class Guardian : MonoBehaviour
     public bool isRangedEnabled = true;
     public bool isTeleportEnabled = true;
     public bool isMovementEnabled = true;
+    public bool isFrozen = false;
     public Queue<GameObject> teleportQueue = new Queue<GameObject>();
 
     private PersistantData PD;
@@ -350,7 +351,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Ranged attack
-        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && !isClimbing && slideCoroutine == null)
+        if (Input.GetButtonDown("Ranged Attack") && animator.GetInteger("nextAttackState") == (int)AttackStates.NONE && !wallSliding && isRangedEnabled && !isClimbing && slideCoroutine == null && !isFrozen)
         {
             DisableMovement(false);
 
@@ -385,7 +386,7 @@ public class Guardian : MonoBehaviour
         }
 
         // Melee attack
-        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && !isClimbing && slideCoroutine == null)
+        if (Input.GetButtonDown("Melee Attack") && animator.GetInteger("nextAttackState") != (int)AttackStates.RANGED && animator.GetInteger("nextAttackState") != (int)AttackStates.MELEE3 && !wallSliding && !isClimbing && slideCoroutine == null && !isFrozen)
         {
             // DisableMovement(false);
 
@@ -605,6 +606,17 @@ public class Guardian : MonoBehaviour
         gameManager.Revive();
 
         tilesToTurnOff.SetActive(false);
+    }
+
+
+    public void Freeze()
+    {
+        isFrozen = true;
+        isMovementEnabled = false;
+        dirX = 0;
+
+        if (isGrounded)
+            rb.velocity = new Vector2(0f, rb.velocity.y);
     }
 
 
