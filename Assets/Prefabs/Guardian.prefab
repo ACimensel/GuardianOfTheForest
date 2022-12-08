@@ -432,7 +432,7 @@ MonoBehaviour:
   orbCountText: {fileID: 0}
   healthBar: {fileID: 0}
   attackPoint: {fileID: 175374680}
-  attackRange: 1.25
+  attackRange: 1.4
   isDamageEnabled: 1
   isRangedEnabled: 1
   isTeleportEnabled: 1
