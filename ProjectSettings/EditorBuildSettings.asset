@@ -6,14 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Area0-Hub.unity
-    guid: 148a47a1717f4ba4e8b2000632a681c3
+    path: Assets/Scenes/StartMenu.unity
+    guid: 0b0f96979fea6f84586abfe3679b6af0
   - enabled: 1
     path: Assets/Scenes/Area1-Corrupt-Forest.unity
     guid: b39525d2199dbe344a20b8d2d72864ab
   - enabled: 1
     path: Assets/Scenes/Area2-Burning-Forest.unity
     guid: 0184b58a51491f5438c84842761e72bc
+  - enabled: 1
+    path: Assets/Scenes/Area0-Hub.unity
+    guid: 148a47a1717f4ba4e8b2000632a681c3
   - enabled: 1
     path: Assets/Scenes/AreaX-FinalBoss.unity
     guid: b188e7f12eda2b94293c98df428d7571

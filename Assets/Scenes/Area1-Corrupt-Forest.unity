@@ -43687,6 +43687,10 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5574917430843865772, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
+      propertyPath: loadLevel
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865773, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Color.b
       value: 1
