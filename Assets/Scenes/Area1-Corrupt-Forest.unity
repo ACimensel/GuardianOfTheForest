@@ -41649,7 +41649,7 @@ MonoBehaviour:
   startChargeCooldown: 1.5
   invulnerabilityTime: 1
   flashTime: 0.8
-  health: 50
+  health: 80
   isFlipped: 0
   player: {fileID: 1255839349}
   animationName: 

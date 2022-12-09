@@ -679,7 +679,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2482420279255231409, guid: ccf35b3d83eb4724ebfa2d4b85734c3a, type: 3}
       propertyPath: health
-      value: 50
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 2482420279255231409, guid: ccf35b3d83eb4724ebfa2d4b85734c3a, type: 3}
       propertyPath: player
