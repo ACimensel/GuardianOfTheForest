@@ -620,6 +620,13 @@ public class Guardian : MonoBehaviour
     }
 
 
+    public void Unfreeze()
+    {
+        isFrozen = false;
+        isMovementEnabled = true;
+    }
+
+
     public void DisableMovement(bool stagger = true)
     {
         animator.SetBool("isStaggered", stagger);
