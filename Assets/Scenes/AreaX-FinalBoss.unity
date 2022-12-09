@@ -738,7 +738,7 @@ MonoBehaviour:
   invulnerabilityTime: 1
   flashTime: 0.8
   cinHandler: {fileID: 1930967069}
-  health: 1
+  health: 100
   walkSpeed: 2
   isFlipped: 0
   facingRight: 0
