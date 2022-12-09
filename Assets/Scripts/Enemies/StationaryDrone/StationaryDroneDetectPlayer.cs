@@ -21,7 +21,7 @@ public class StationaryDroneDetectPlayer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
+        if (LayerMask.LayerToName(col.gameObject.layer) == "Player" || LayerMask.LayerToName(col.gameObject.layer) == "Climbing")
         {
             animator.SetBool("detectedPlayer", true);
         }
@@ -30,7 +30,7 @@ public class StationaryDroneDetectPlayer : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D col)
     {
-        if (LayerMask.LayerToName(col.gameObject.layer) == "Player")
+        if (LayerMask.LayerToName(col.gameObject.layer) == "Player" || LayerMask.LayerToName(col.gameObject.layer) == "Climbing")
         {
             animator.SetBool("detectedPlayer", false);
         }
