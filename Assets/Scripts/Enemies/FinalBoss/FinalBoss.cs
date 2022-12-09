@@ -6,6 +6,7 @@ public class FinalBoss : MonoBehaviour
 {
     [SerializeField] float invulnerabilityTime = 1f;
     [SerializeField] float flashTime = 0.8f;
+    [SerializeField] FinalBossCinematicHandler cinHandler;
 
     public int health = 60;
     public float walkSpeed = 1f;
@@ -171,8 +172,13 @@ public class FinalBoss : MonoBehaviour
                 animator.ResetTrigger("chargeAttack");
                 animator.ResetTrigger("rangedAttack");
                 animator.SetTrigger("isDead");
+
                 gameObject.layer = LayerMask.NameToLayer("Dead");
-                GetComponent<DropOrbs>().Drop();
+                foreach (Transform child in transform){
+                    child.gameObject.layer = LayerMask.NameToLayer("Dead");
+                }
+                // GetComponent<DropOrbs>().Drop();
+                cinHandler.EndGame();
             }
         }
     }
