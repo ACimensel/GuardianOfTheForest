@@ -37,10 +37,13 @@ public class A1BossCharge : MonoBehaviour
     void SetVelocity(string direction)
     {
         if (direction == "right")
+        {
+            transform.Rotate(0f, 180f, 0f);
             GetComponent<Rigidbody2D>().velocity = new Vector2(moveSpeed, 0f);
-        else if (direction == "left")
+        }
+        else 
+        {
             GetComponent<Rigidbody2D>().velocity = new Vector2(-moveSpeed, 0f);
+        }
     }
-
-
 }

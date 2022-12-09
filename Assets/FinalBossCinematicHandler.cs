@@ -15,12 +15,11 @@ public class FinalBossCinematicHandler : MonoBehaviour
 
     private void Awake() {
         PD = GameObject.Find("PersistantData").GetComponent<PersistantData>();
+        bossAnim = cinematic.GetComponent<Animator>();
     }
 
     void Start()
     {
-        bossAnim = cinematic.GetComponent<Animator>();
-
         if(!PD.finalBossCinematicPlayed){
             boss.SetActive(false);
             guardian.GetComponent<Guardian>().Freeze();
