@@ -70,9 +70,11 @@ public class ChangeTree : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collider){
-        if(PD.portalOpenTransitionPlayed && collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Sliding")) {
-            SceneManager.LoadScene(3);
+    private void OnTriggerEnter2D(Collider2D col){
+        string layerName = LayerMask.LayerToName(col.gameObject.layer);
+
+        if(PD.portalOpenTransitionPlayed && (layerName == "Player" || layerName == "Sliding")) {
+            SceneManager.LoadScene("AreaX-FinalBoss");
         }
     }
     

@@ -513,7 +513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5574917430843865771, guid: d8b897d2bd54236468dccbc6004dd8a5, type: 3}
       propertyPath: m_Offset.x
@@ -769,6 +769,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
+      propertyPath: finalBossKilled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
       propertyPath: firstTransitionPlayed
       value: 0
       objectReference: {fileID: 0}
@@ -782,6 +786,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
       propertyPath: area2BossCinematicPlayed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361858253686542018, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
+      propertyPath: finalBossCinematicPlayed
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1361858253686542019, guid: 87d1ce31a3da254458fa369e5128a333, type: 3}
