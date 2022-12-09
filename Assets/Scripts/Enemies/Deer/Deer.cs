@@ -19,6 +19,7 @@ public class Deer : MonoBehaviour
     private Color startColor;
     private bool isDamageEnabled = true;
     private float destroyTime = 4f;
+    private bool isDead = false;
 
     public bool hitWall = false;
     AnimatorClipInfo[] animCurrentClipInfo;
@@ -38,10 +39,11 @@ public class Deer : MonoBehaviour
 
     void Update()
     {
-        animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
-        animationName = animCurrentClipInfo[0].clip.name;
-
-        Patrol();
+        // animCurrentClipInfo = animator.GetCurrentAnimatorClipInfo(0);
+        // animationName = animCurrentClipInfo[0].clip.name;
+        
+        if(!isDead)
+            Patrol();
     }
 
     void Patrol()
@@ -151,6 +153,9 @@ public class Deer : MonoBehaviour
             }
             else
             {
+                isDead = true;
+                rb.velocity = Vector2.zero;
+
                 gameObject.layer = LayerMask.NameToLayer("Dead");
                 foreach (Transform child in transform)
                 {
